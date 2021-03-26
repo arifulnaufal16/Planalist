@@ -1,4 +1,4 @@
-import 'package:Planalist/login.dart';
+import 'package:Planalist/splashscreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Login(),
+      home: SplashScreen(),
     );
   }
 }

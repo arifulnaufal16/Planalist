@@ -22,7 +22,7 @@ class _SignupState extends State<Signup> {
               ),
               title: Container(
                 child: Text(
-                  "Sign In",
+                  "Sign Up",
                   style: TextStyle(color: Colors.black),
                 ),
               ),
@@ -58,7 +58,7 @@ class _SignupState extends State<Signup> {
               SizedBox(height: 15.0),
               Container(
                 child: TextField(
-                  autofocus: true,
+                  autofocus: false,
                   style: TextStyle(fontSize: 15.0, color: Colors.black),
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -83,7 +83,7 @@ class _SignupState extends State<Signup> {
               Container(
                 child: TextField(
                   obscureText: true,
-                  autofocus: true,
+                  autofocus: false,
                   style: TextStyle(fontSize: 15.0, color: Colors.black),
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -108,7 +108,7 @@ class _SignupState extends State<Signup> {
               Container(
                 child: TextField(
                   obscureText: true,
-                  autofocus: true,
+                  autofocus: false,
                   style: TextStyle(fontSize: 15.0, color: Colors.black),
                   decoration: InputDecoration(
                     border: InputBorder.none,

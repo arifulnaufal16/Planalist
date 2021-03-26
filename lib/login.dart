@@ -15,41 +15,45 @@ class _LoginState extends State<Login> {
           preferredSize: Size.fromHeight(50.0),
           child: Container(
             child: AppBar(
+              bottomOpacity: 50,
               backgroundColor: Colors.white,
               leading: Icon(
                 Icons.navigate_before,
                 color: Colors.black,
               ),
-              title: Container(
-                child: Text(
-                  "Login",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              actions: [
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(right: 20),
-                      child: FlatButton(
-                          splashColor: Colors.white,
-                          highlightColor: Colors.white,
-                          child: Text(
-                            "Sign In",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Text(
+                      "Login",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  Container(
+                    child: FlatButton(
+                        splashColor: Colors.white,
+                        highlightColor: Colors.white,
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            color: Colors.black,
                           ),
-                          onPressed: () {
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Signup();
-                            }));
-                          }),
-                    )
-                  ],
-                ),
-              ],
+                        ),
+                        onPressed: () {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Signup();
+                          }));
+                        }),
+                  )
+                ],
+              ),
+              // actions: [
+              //   Row(
+              //     children: [],
+              //   ),
+              // ],
             ),
           ),
         ),
@@ -62,7 +66,7 @@ class _LoginState extends State<Login> {
               SizedBox(height: 15.0),
               Container(
                 child: TextField(
-                  autofocus: true,
+                  autofocus: false,
                   style: TextStyle(fontSize: 15.0, color: Colors.black),
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -87,7 +91,7 @@ class _LoginState extends State<Login> {
               Container(
                 child: TextField(
                   obscureText: true,
-                  autofocus: true,
+                  autofocus: false,
                   style: TextStyle(fontSize: 15.0, color: Colors.black),
                   decoration: InputDecoration(
                     border: InputBorder.none,
