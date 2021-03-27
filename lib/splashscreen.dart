@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:Planalist/infoscreen.dart';
 import 'package:Planalist/login.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     var duration = const Duration(seconds: 3);
     return Timer(duration, () {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return Login();
+        return InfoScreen();
       }));
     });
   }
