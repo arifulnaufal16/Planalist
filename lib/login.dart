@@ -51,11 +51,6 @@ class _LoginState extends State<Login> {
                   )
                 ],
               ),
-              // actions: [
-              //   Row(
-              //     children: [],
-              //   ),
-              // ],
             ),
           ),
         ),

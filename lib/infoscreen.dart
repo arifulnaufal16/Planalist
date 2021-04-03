@@ -27,31 +27,36 @@ class _InfoScreenState extends State<InfoScreen> {
   ];
 
   List<String> description = [
-    'lorem ipsum',
-    'lorem ipsum',
-    'lorem ipsum',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit q.',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit s.',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit r.',
     '',
   ];
   bool myButton = false;
 
-  void _nextImage() {
-    setState(() {
-      if (photoIndex < 1) {
-        photoIndex = photoIndex + 1;
-        titleIndex = titleIndex + 1;
-        descIndex = descIndex + 1;
-      } else if (photoIndex == 1) {
-        myButton = true;
-        photoIndex = photoIndex + 1;
-      } else if (photoIndex > 1) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return Login();
-          }),
-        );
-      }
-    });
+  final int _numPages = 3;
+  final PageController _pageController = PageController(initialPage: 0);
+  int _currentPage = 0;
+
+  List<Widget> _buildPageIndicator() {
+    List<Widget> list = [];
+    for (int i = 0; i < _numPages; i++) {
+      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    }
+    return list;
+  }
+
+  Widget _indicator(bool isActive) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      height: 15.0,
+      width: 15.0,
+      decoration: BoxDecoration(
+        color: isActive ? Colors.green : Colors.grey,
+        borderRadius: BorderRadius.all(Radius.circular(50)),
+      ),
+    );
   }
 
   @override
@@ -61,38 +66,200 @@ class _InfoScreenState extends State<InfoScreen> {
         body: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(photos[photoIndex]),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              height: 400,
-            ),
-            Container(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Text(titles[titleIndex]),
-                  Text(description[descIndex]),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  RaisedButton(
-                    onPressed: _nextImage,
-                    elevation: 0,
-                    child: myButton
-                        ? Text("Continue")
-                        : Icon(Icons.navigate_next_rounded),
+              height: 600.0,
+              child: PageView(
+                physics: ClampingScrollPhysics(),
+                controller: _pageController,
+                onPageChanged: (int page) {
+                  setState(() {
+                    _currentPage = page;
+                  });
+                },
+                children: <Widget>[
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Center(
+                          child: Image(
+                            image: AssetImage(photos[0]),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 30.0),
+                              Text(
+                                titles[0],
+                                style: TextStyle(
+                                  fontSize: 32,
+                                ),
+                              ),
+                              SizedBox(height: 15.0),
+                              Text(
+                                description[0],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Center(
+                          child: Image(
+                            image: AssetImage(photos[1]),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 30.0),
+                              Text(
+                                titles[1],
+                                style: TextStyle(
+                                  fontSize: 32,
+                                ),
+                              ),
+                              SizedBox(height: 15.0),
+                              Text(
+                                description[1],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Center(
+                          child: Image(
+                            image: AssetImage(photos[2]),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 30.0),
+                              Text(
+                                titles[2],
+                                style: TextStyle(
+                                  fontSize: 32,
+                                ),
+                              ),
+                              SizedBox(height: 15.0),
+                              Text(
+                                description[2],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            )
+            ),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildPageIndicator(),
+                  ),
+                  _currentPage != _numPages - 1
+                      ? Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.bottomRight,
+                            child: FlatButton(
+                              height: 50,
+                              minWidth: 50,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              color: Colors.amber,
+                              onPressed: () {
+                                _pageController.nextPage(
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.ease,
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.black,
+                                    size: 20.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.bottomRight,
+                            child: FlatButton(
+                              height: 50,
+                              minWidth: 50,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              color: Colors.amber,
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return Login();
+                                  }),
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'Continue',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                ],
+              ),
+            ),
           ],
         ),
       ),
