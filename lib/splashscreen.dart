@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:Planalist/infoscreen.dart';
 import 'package:Planalist/login.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -17,9 +18,12 @@ class _SplashScreenState extends State<SplashScreen> {
   startSplashScreen() async {
     var duration = const Duration(seconds: 3);
     return Timer(duration, () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return InfoScreen();
-      }));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return InfoScreen();
+        }),
+      );
     });
   }
 

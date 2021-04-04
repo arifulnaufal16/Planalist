@@ -1,6 +1,7 @@
 import 'package:Planalist/login.dart';
 import 'package:flutter/material.dart';
 import 'package:Planalist/splashscreen.dart';
+import 'package:page_transition/page_transition.dart';
 
 class InfoScreen extends StatefulWidget {
   @override
@@ -236,9 +237,14 @@ class _InfoScreenState extends State<InfoScreen> {
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return Login();
-                                  }),
+                                  PageTransition(
+                                      type: PageTransitionType.fade,
+                                      child: Login(),
+                                      duration: Duration(microseconds: 800),
+                                      ctx: context),
+                                  // MaterialPageRoute(builder: (context) {
+                                  //   return Login();
+                                  // }),
                                 );
                               },
                               child: Row(

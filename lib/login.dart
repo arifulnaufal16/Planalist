@@ -1,5 +1,6 @@
 import 'package:Planalist/signup.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -41,11 +42,13 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) {
-                              return Signup();
-                            }),
+                            PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                duration: Duration(milliseconds: 800),
+                                child: Signup(),
+                                ctx: context),
                           );
                         }),
                   )

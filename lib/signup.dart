@@ -1,5 +1,6 @@
 import 'package:Planalist/login.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -32,16 +33,21 @@ class _SignupState extends State<Signup> {
                     Container(
                       padding: EdgeInsets.only(right: 20),
                       child: TextButton(
-                          child: Text(
-                            "Login",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          onPressed: () {
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Login();
-                            }));
-                          }),
+                        child: Text(
+                          "Login",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.leftToRight,
+                                duration: Duration(milliseconds: 800),
+                                child: Login(),
+                                ctx: context),
+                          );
+                        },
+                      ),
                     )
                   ],
                 ),
