@@ -60,6 +60,128 @@ class _InfoScreenState extends State<InfoScreen> {
     );
   }
 
+  Widget infoPage(photos, titles, description, i) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Image(
+              image: AssetImage(photos[i]),
+              fit: BoxFit.fill,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 30.0),
+                Text(
+                  titles[i],
+                  style: TextStyle(
+                    fontSize: 32,
+                  ),
+                ),
+                SizedBox(height: 15.0),
+                Text(
+                  description[i],
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buttonNext() {
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _buildPageIndicator(),
+          ),
+          _currentPage != _numPages - 1
+              ? Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomRight,
+                    child: FlatButton(
+                      height: 50,
+                      minWidth: 50,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      color: Colors.amber,
+                      onPressed: () {
+                        _pageController.nextPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.black,
+                            size: 20.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomRight,
+                    child: FlatButton(
+                      height: 50,
+                      minWidth: 50,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      color: Colors.amber,
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: Login(),
+                              duration: Duration(microseconds: 800),
+                              ctx: context),
+                          // MaterialPageRoute(builder: (context) {
+                          //   return Login();
+                          // }),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            'Continue',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -77,195 +199,13 @@ class _InfoScreenState extends State<InfoScreen> {
                   });
                 },
                 children: <Widget>[
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Center(
-                          child: Image(
-                            image: AssetImage(photos[0]),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 30.0),
-                              Text(
-                                titles[0],
-                                style: TextStyle(
-                                  fontSize: 32,
-                                ),
-                              ),
-                              SizedBox(height: 15.0),
-                              Text(
-                                description[0],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Center(
-                          child: Image(
-                            image: AssetImage(photos[1]),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 30.0),
-                              Text(
-                                titles[1],
-                                style: TextStyle(
-                                  fontSize: 32,
-                                ),
-                              ),
-                              SizedBox(height: 15.0),
-                              Text(
-                                description[1],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Center(
-                          child: Image(
-                            image: AssetImage(photos[2]),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 30.0),
-                              Text(
-                                titles[2],
-                                style: TextStyle(
-                                  fontSize: 32,
-                                ),
-                              ),
-                              SizedBox(height: 15.0),
-                              Text(
-                                description[2],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  infoPage(photos, titles, description, 0),
+                  infoPage(photos, titles, description, 1),
+                  infoPage(photos, titles, description, 2),
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: _buildPageIndicator(),
-                  ),
-                  _currentPage != _numPages - 1
-                      ? Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.bottomRight,
-                            child: FlatButton(
-                              height: 50,
-                              minWidth: 50,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              color: Colors.amber,
-                              onPressed: () {
-                                _pageController.nextPage(
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.ease,
-                                );
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.black,
-                                    size: 20.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      : Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.bottomRight,
-                            child: FlatButton(
-                              height: 50,
-                              minWidth: 50,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              color: Colors.amber,
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.fade,
-                                      child: Login(),
-                                      duration: Duration(microseconds: 800),
-                                      ctx: context),
-                                  // MaterialPageRoute(builder: (context) {
-                                  //   return Login();
-                                  // }),
-                                );
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    'Continue',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                ],
-              ),
-            ),
+            buttonNext()
           ],
         ),
       ),
