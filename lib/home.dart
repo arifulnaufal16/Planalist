@@ -1,4 +1,4 @@
-import 'package:Planalist/login.dart';
+import 'package:Planalist/task/myTask.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final listPage = <Widget>[
-      Text('Home'),
+      MyTask(),
       Text('Reminder'),
       Text('Profile'),
     ];
@@ -154,5 +154,3 @@ class _HomeState extends State<Home> {
         ));
   }
 }
-
-class _scaffoldKey {}

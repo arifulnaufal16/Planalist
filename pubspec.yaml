@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   introduction_screen: ^2.1.0
   page_transition: "^1.1.7+6"
+  custom_dropdown: ^0.0.2
 
 dev_dependencies:
   flutter_test:
