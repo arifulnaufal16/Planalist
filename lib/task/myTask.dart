@@ -33,15 +33,45 @@ class _MyTaskState extends State<MyTask> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Garden Ciputat'),
+              Text(
+                'Garden Ciputat',
+                style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700),
+              ),
               Container(
                 padding: EdgeInsets.only(left: 20, top: 10),
                 child: Column(
                   children: [
-                    Text('List 1'),
-                    Text('List 1'),
-                    Text('List 1'),
-                    Text('List 1'),
+                    Text(
+                      'List 1',
+                      style: TextStyle(
+                          fontFamily: 'PoppinsStyle',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w100),
+                    ),
+                    Text(
+                      'List 1',
+                      style: TextStyle(
+                          fontFamily: 'PoppinsStyle',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w100),
+                    ),
+                    Text(
+                      'List 1',
+                      style: TextStyle(
+                          fontFamily: 'PoppinsStyle',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w100),
+                    ),
+                    Text(
+                      'List 1',
+                      style: TextStyle(
+                          fontFamily: 'PoppinsStyle',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w100),
+                    ),
                   ],
                 ),
               )
@@ -62,11 +92,21 @@ class _MyTaskState extends State<MyTask> {
           children: [
             Text(
               "My Task",
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'PoppinsStyle',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Text(
               "See All",
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(
+                fontSize: 12,
+                fontFamily: 'PoppinsStyle',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w100,
+              ),
             ),
           ],
         ),

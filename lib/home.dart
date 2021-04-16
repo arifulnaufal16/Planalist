@@ -1,4 +1,5 @@
 import 'package:Planalist/task/myTask.dart';
+import 'package:Planalist/planalist_icon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -26,13 +27,13 @@ class _HomeState extends State<Home> {
 
     final bottomNavBarItems = <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-          icon: Icon(Icons.home, size: 30),
+          icon: Icon(PlanalistIcon.home, size: 30),
           title: Container(height: 0, child: Text(''))),
       BottomNavigationBarItem(
-          icon: Icon(Icons.water_damage, size: 30),
+          icon: Icon(PlanalistIcon.watering, size: 30),
           title: Container(height: 0, child: Text(''))),
       BottomNavigationBarItem(
-          icon: Icon(Icons.people, size: 30),
+          icon: Icon(PlanalistIcon.user, size: 30),
           title: Container(height: 0, child: Text(''))),
     ];
 
@@ -46,11 +47,25 @@ class _HomeState extends State<Home> {
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
+          backgroundColor: Colors.white,
+          toolbarHeight: 52,
           leading: new IconButton(
-            icon: new Icon(Icons.settings),
+            icon: new Icon(
+              PlanalistIcon.menu,
+              color: Colors.black,
+            ),
             onPressed: () => _scaffoldKey.currentState.openDrawer(),
           ),
-          title: Text("Planalist", style: TextStyle(fontSize: 16)),
+          title: Text(
+            "Planalist",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontFamily: 'PoppinsStyle',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
         drawer: Drawer(
           child: ListView(
@@ -105,29 +120,86 @@ class _HomeState extends State<Home> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.account_balance),
-                title: Text('Account'),
+                leading: Icon(
+                  PlanalistIcon.account,
+                  color: Colors.black,
+                ),
+                title: Text(
+                  'Account',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontSize: 12,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
                 onTap: () {},
               ),
               ListTile(
-                leading: Icon(Icons.local_activity),
-                title: Text('Activity'),
+                leading: Icon(
+                  PlanalistIcon.chart,
+                  color: Colors.black,
+                ),
+                title: Text(
+                  'Activity',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontSize: 12,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
                 onTap: () {},
               ),
               ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('My Setting'),
+                leading: Icon(
+                  PlanalistIcon.setting,
+                  color: Colors.black,
+                ),
+                title: Text(
+                  'My Setting',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontSize: 12,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
                 onTap: () {},
               ),
-              Divider(color: Colors.black),
+              Divider(
+                color: Colors.black,
+              ),
               ListTile(
-                leading: Icon(Icons.help_center),
-                title: Text('Help Center'),
+                leading: Icon(
+                  PlanalistIcon.help,
+                  color: Colors.black,
+                ),
+                title: Text(
+                  'Help Center',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontSize: 12,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
                 onTap: () {},
               ),
               ListTile(
-                leading: Icon(Icons.video_library),
-                title: Text('Video Tutorial'),
+                leading: Icon(
+                  PlanalistIcon.play,
+                  color: Colors.black,
+                ),
+                title: Text(
+                  'Video Tutorial',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontSize: 12,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
                 onTap: () {},
               ),
             ],
@@ -142,7 +214,12 @@ class _HomeState extends State<Home> {
               Radius.circular(30),
             ),
             boxShadow: [
-              BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 2),
+              BoxShadow(
+                color: Colors.grey.shade500,
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: Offset(0, 2),
+              ),
             ],
           ),
           child: ClipRRect(

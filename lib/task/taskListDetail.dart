@@ -30,16 +30,18 @@ class _HomePageState extends State<TaskListDetail> {
                   });
                 },
               ),
-              Container(
-                  width: MediaQuery.of(context).size.width * 0.1,
-                  child: Text('1102', style: TextStyle(fontSize: 16.0))),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: Text(
-                  'Siram Pohon ',
-                  style: TextStyle(fontSize: 16.0),
+              if (!this.valuefirst[index])
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.1,
+                    child: Text('1102', style: TextStyle(fontSize: 16.0))),
+              if (!this.valuefirst[index])
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: Text(
+                    'Siram Pohon ',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
                 ),
-              ),
             ],
           ),
         ),

@@ -17,6 +17,7 @@ class _InfoScreenState extends State<InfoScreen> {
     'image/image1.png',
     'image/image2.png',
     'image/image3.png',
+    'image/image1.png',
     '',
   ];
 
@@ -24,6 +25,7 @@ class _InfoScreenState extends State<InfoScreen> {
     'Title1',
     'Title2',
     'Title3',
+    'WELCOME',
     '',
   ];
 
@@ -31,31 +33,35 @@ class _InfoScreenState extends State<InfoScreen> {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit q.',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit s.',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit r.',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit t.',
     '',
   ];
   bool myButton = false;
-
-  final int _numPages = 3;
+  bool visibleScroll = true;
+  final int _numPages = 4;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
 
   List<Widget> _buildPageIndicator() {
     List<Widget> list = [];
-    for (int i = 0; i < _numPages; i++) {
+    for (int i = 0; i < _numPages - 1; i++) {
       list.add(i == _currentPage ? _indicator(true) : _indicator(false));
     }
     return list;
   }
 
   Widget _indicator(bool isActive) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
-      height: 15.0,
-      width: 15.0,
-      decoration: BoxDecoration(
-        color: isActive ? Colors.green : Colors.grey,
-        borderRadius: BorderRadius.all(Radius.circular(50)),
+    return Visibility(
+      visible: true,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 150),
+        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        height: 15.0,
+        width: 15.0,
+        decoration: BoxDecoration(
+          color: isActive ? Colors.green : Colors.grey,
+          borderRadius: BorderRadius.all(Radius.circular(50)),
+        ),
       ),
     );
   }
@@ -80,14 +86,17 @@ class _InfoScreenState extends State<InfoScreen> {
                 Text(
                   titles[i],
                   style: TextStyle(
-                    fontSize: 32,
-                  ),
+                      fontSize: 32,
+                      fontFamily: 'PoppinsStyle',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w200),
                 ),
                 SizedBox(height: 15.0),
                 Text(
                   description[i],
                   style: TextStyle(
                     fontSize: 16,
+                    fontFamily: 'PoppinsStyle',
                   ),
                 ),
               ],
@@ -202,6 +211,7 @@ class _InfoScreenState extends State<InfoScreen> {
                   infoPage(photos, titles, description, 0),
                   infoPage(photos, titles, description, 1),
                   infoPage(photos, titles, description, 2),
+                  infoPage(photos, titles, description, 3),
                 ],
               ),
             ),

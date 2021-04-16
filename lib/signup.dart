@@ -12,10 +12,15 @@ class _SignupState extends State<Signup> {
     return Container(
       child: TextField(
         autofocus: false,
-        style: TextStyle(fontSize: 15.0, color: Colors.black),
+        style: TextStyle(
+            fontSize: 15.0,
+            color: Colors.black,
+            fontFamily: 'PoppinsStyle',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w100),
         decoration: InputDecoration(
           border: InputBorder.none,
-          // hintText: 'Username',
+          fillColor: Colors.transparent,
           filled: true,
           contentPadding:
               const EdgeInsets.only(left: 14.0, bottom: 6.0, top: 8.0),
@@ -23,8 +28,8 @@ class _SignupState extends State<Signup> {
             borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide.none,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
@@ -40,6 +45,7 @@ class _SignupState extends State<Signup> {
         style: TextStyle(fontSize: 15.0, color: Colors.black),
         decoration: InputDecoration(
           border: InputBorder.none,
+          fillColor: Colors.transparent,
           // hintText: 'Password',
           filled: true,
           contentPadding:
@@ -48,8 +54,8 @@ class _SignupState extends State<Signup> {
             borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide.none,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
@@ -62,11 +68,19 @@ class _SignupState extends State<Signup> {
       child: RaisedButton(
         // onPressed: () {},
         onPressed: () {},
-        color: Colors.amberAccent,
-        splashColor: Colors.amber,
-        child: Text("Sign Up"),
+        color: Colors.green.shade400,
+        splashColor: Colors.green,
+        child: Text(
+          "Sign Up",
+          style: TextStyle(
+              fontSize: 15.0,
+              color: Colors.white,
+              fontFamily: 'PoppinsStyle',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w100),
+        ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
     );
@@ -78,7 +92,12 @@ class _SignupState extends State<Signup> {
       child: TextButton(
         child: Text(
           "Login",
-          style: TextStyle(color: Colors.black, fontSize: 16),
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontFamily: 'PoppinsStyle',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w100),
         ),
         onPressed: () {
           Navigator.push(
@@ -110,7 +129,13 @@ class _SignupState extends State<Signup> {
               title: Container(
                 child: Text(
                   "Sign Up",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontFamily: 'PoppinsStyle',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               actions: [
@@ -126,18 +151,36 @@ class _SignupState extends State<Signup> {
           child: ListView(
             children: [
               SizedBox(height: 5.0),
-              Text("Email"),
-              SizedBox(height: 15.0),
+              Text(
+                "Email",
+                style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100),
+              ),
+              SizedBox(height: 12.0),
               formTextEmail(),
-              SizedBox(height: 25.0),
-              Text("Password"),
-              SizedBox(height: 15.0),
+              SizedBox(height: 22.0),
+              Text(
+                "Password",
+                style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100),
+              ),
+              SizedBox(height: 12.0),
               formTextPassword(),
-              SizedBox(height: 25.0),
-              Text("Re-Enter Password"),
-              SizedBox(height: 15.0),
+              SizedBox(height: 22.0),
+              Text(
+                "Re-Enter Password",
+                style: TextStyle(
+                    fontFamily: 'PoppinsStyle',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100),
+              ),
+              SizedBox(height: 12.0),
               formTextPassword(),
-              SizedBox(height: 35.0),
+              SizedBox(height: 32.0),
               buttonSignUp(),
             ],
           ),
@@ -145,7 +188,14 @@ class _SignupState extends State<Signup> {
         bottomNavigationBar: Container(
           alignment: Alignment.center,
           height: 50,
-          child: Text("Don’t have an account? Sign up"),
+          child: Text(
+            "Don’t have an account? Sign up",
+            style: TextStyle(
+                fontSize: 12,
+                fontFamily: 'PoppinsStyle',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w100),
+          ),
         ),
       ),
     );

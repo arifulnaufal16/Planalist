@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:Planalist/infoscreen.dart';
-import 'package:Planalist/login.dart';
+import 'package:Planalist/home.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 

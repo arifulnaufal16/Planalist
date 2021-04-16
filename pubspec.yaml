@@ -31,6 +31,7 @@ dependencies:
   introduction_screen: ^2.1.0
   page_transition: "^1.1.7+6"
   custom_dropdown: ^0.0.2
+  group_button: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -81,3 +82,15 @@ flutter:
     - image/image1.png
     - image/image2.png
     - image/image3.png 
+  fonts:
+    - family: PlanalistIcon
+      fonts:
+        - asset: icon/PlanalistIcon.ttf
+    - family: PoppinsStyle
+      fonts:
+        - asset: fonts/Poppins-Light.ttf
+          weight: 100
+        - asset: fonts/Poppins-Italic.ttf
+          style: italic
+        - asset: fonts/Poppins-SemiBold.ttf
+          weight: 200

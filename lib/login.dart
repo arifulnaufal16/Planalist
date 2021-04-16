@@ -1,4 +1,6 @@
+import 'package:Planalist/home.dart';
 import 'package:Planalist/signup.dart';
+import 'package:Planalist/task/myTask.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -13,10 +15,15 @@ class _LoginState extends State<Login> {
     return Container(
       child: TextField(
         autofocus: false,
-        style: TextStyle(fontSize: 15.0, color: Colors.black),
+        style: TextStyle(
+            fontSize: 15.0,
+            color: Colors.black,
+            fontFamily: 'PoppinsStyle',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w100),
         decoration: InputDecoration(
+          fillColor: Colors.transparent,
           border: InputBorder.none,
-          // hintText: 'Username',
           filled: true,
           contentPadding:
               const EdgeInsets.only(left: 14.0, bottom: 6.0, top: 8.0),
@@ -24,8 +31,8 @@ class _LoginState extends State<Login> {
             borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide.none,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
@@ -41,6 +48,7 @@ class _LoginState extends State<Login> {
         style: TextStyle(fontSize: 15.0, color: Colors.black),
         decoration: InputDecoration(
           border: InputBorder.none,
+          fillColor: Colors.transparent,
           // hintText: 'Password',
           filled: true,
           contentPadding:
@@ -49,8 +57,8 @@ class _LoginState extends State<Login> {
             borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide.none,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
@@ -62,12 +70,29 @@ class _LoginState extends State<Login> {
     return Container(
       child: RaisedButton(
         // onPressed: () {},
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+                child: Home(),
+                ctx: context),
+          );
+        },
         color: Colors.amberAccent,
         splashColor: Colors.amber,
-        child: Text("Login"),
+        child: Text(
+          "Login",
+          style: TextStyle(
+              fontSize: 15.0,
+              color: Colors.black,
+              fontFamily: 'PoppinsStyle',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w100),
+        ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
     );
@@ -77,7 +102,13 @@ class _LoginState extends State<Login> {
     return Container(
       child: Text(
         "Login",
-        style: TextStyle(color: Colors.black, fontSize: 16),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+          fontFamily: 'PoppinsStyle',
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -89,7 +120,12 @@ class _LoginState extends State<Login> {
           highlightColor: Colors.white,
           child: Text(
             "Sign Up",
-            style: TextStyle(color: Colors.black, fontSize: 16),
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontFamily: 'PoppinsStyle',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w100),
           ),
           onPressed: () {
             Navigator.push(
@@ -132,14 +168,22 @@ class _LoginState extends State<Login> {
           child: ListView(
             children: [
               SizedBox(height: 5.0),
-              Text("Email"),
-              SizedBox(height: 15.0),
+              Text("Email",
+                  style: TextStyle(
+                      fontFamily: 'PoppinsStyle',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100)),
+              SizedBox(height: 12.0),
               formTextEmail(),
-              SizedBox(height: 25.0),
-              Text("Password"),
-              SizedBox(height: 15.0),
+              SizedBox(height: 22.0),
+              Text("Password",
+                  style: TextStyle(
+                      fontFamily: 'PoppinsStyle',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100)),
+              SizedBox(height: 12.0),
               formTextPassword(),
-              SizedBox(height: 35.0),
+              SizedBox(height: 32.0),
               buttonLogin()
             ],
           ),
@@ -147,7 +191,14 @@ class _LoginState extends State<Login> {
         bottomNavigationBar: Container(
           alignment: Alignment.center,
           height: 50,
-          child: Text("Don’t have an account? Sign up"),
+          child: Text(
+            "Don’t have an account? Sign up",
+            style: TextStyle(
+                fontSize: 12,
+                fontFamily: 'PoppinsStyle',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w100),
+          ),
         ),
       ),
     );
