@@ -1,6 +1,8 @@
 import 'dart:ffi';
 import 'package:custom_dropdown/custom_dropdown.dart';
 import 'package:group_button/group_button.dart';
+import 'package:page_transition/page_transition.dart';
+import 'taskListDetail.dart';
 import 'package:flutter/material.dart';
 
 class NewTask extends StatefulWidget {
@@ -29,9 +31,19 @@ class _NewTaskState extends State<NewTask> {
           child: Container(
             child: AppBar(
               backgroundColor: Colors.white,
-              leading: Icon(
-                Icons.navigate_before,
+              leading: IconButton(
+                icon: Icon(Icons.navigate_before),
                 color: Colors.black,
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                        child: TaskListDetail(),
+                        ctx: context),
+                  );
+                },
               ),
               title: Container(
                 child: Text(

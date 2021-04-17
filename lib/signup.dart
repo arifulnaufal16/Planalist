@@ -100,7 +100,7 @@ class _SignupState extends State<Signup> {
               fontWeight: FontWeight.w100),
         ),
         onPressed: () {
-          Navigator.push(
+          Navigator.pop(
             context,
             PageTransition(
                 type: PageTransitionType.leftToRight,

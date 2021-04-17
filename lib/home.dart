@@ -1,5 +1,7 @@
 import 'package:Planalist/task/myTask.dart';
+import 'package:Planalist/profile/myProfile.dart';
 import 'package:Planalist/planalist_icon_icons.dart';
+import 'package:Planalist/profile/myProfileSetting.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -22,7 +24,7 @@ class _HomeState extends State<Home> {
     final listPage = <Widget>[
       MyTask(),
       Text('Reminder'),
-      Text('Profile'),
+      MyProfile(),
     ];
 
     final bottomNavBarItems = <BottomNavigationBarItem>[
@@ -33,7 +35,7 @@ class _HomeState extends State<Home> {
           icon: Icon(PlanalistIcon.watering, size: 30),
           title: Container(height: 0, child: Text(''))),
       BottomNavigationBarItem(
-          icon: Icon(PlanalistIcon.user, size: 30),
+          icon: Icon(PlanalistIcon.account, size: 30),
           title: Container(height: 0, child: Text(''))),
     ];
 
@@ -49,23 +51,51 @@ class _HomeState extends State<Home> {
         appBar: new AppBar(
           backgroundColor: Colors.white,
           toolbarHeight: 52,
-          leading: new IconButton(
-            icon: new Icon(
-              PlanalistIcon.menu,
-              color: Colors.black,
-            ),
-            onPressed: () => _scaffoldKey.currentState.openDrawer(),
-          ),
-          title: Text(
-            "Planalist",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontFamily: 'PoppinsStyle',
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w700,
+          leading: Container(
+            padding: EdgeInsets.only(left: 20),
+            child: new IconButton(
+              icon: new Icon(
+                PlanalistIcon.menu,
+                color: Colors.black,
+              ),
+              onPressed: () => _scaffoldKey.currentState.openDrawer(),
             ),
           ),
+          title: Container(
+            padding: EdgeInsets.only(left: 0),
+            child: Text(
+              "Planalist",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontFamily: 'PoppinsStyle',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          actions: [
+            if (selectedTabIndex == 2)
+              Container(
+                padding: EdgeInsets.only(right: 10),
+                child: IconButton(
+                  icon: Icon(
+                    PlanalistIcon.setting,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 800),
+                          child: MyProfileSettings(),
+                          ctx: context),
+                    );
+                  },
+                ),
+              )
+          ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -208,7 +238,7 @@ class _HomeState extends State<Home> {
         body: Center(child: listPage[selectedTabIndex]),
         bottomNavigationBar: Container(
           height: 64,
-          margin: EdgeInsets.all(20),
+          margin: EdgeInsets.fromLTRB(24, 0, 24, 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(30),
@@ -216,9 +246,9 @@ class _HomeState extends State<Home> {
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.shade500,
-                spreadRadius: 1,
+                spreadRadius: 0.2,
                 blurRadius: 1,
-                offset: Offset(0, 2),
+                offset: Offset(0, 1.7),
               ),
             ],
           ),

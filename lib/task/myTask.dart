@@ -8,6 +8,7 @@ class MyTask extends StatefulWidget {
 }
 
 class _MyTaskState extends State<MyTask> {
+  bool visibilityCard = false;
   Widget cardGardenList() {
     return Card(
       shape: RoundedRectangleBorder(
@@ -21,14 +22,14 @@ class _MyTaskState extends State<MyTask> {
           Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.leftToRight,
-                duration: Duration(milliseconds: 800),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
                 child: TaskListDetail(),
                 ctx: context),
           );
         },
         child: Container(
-          width: 300,
+          width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,25 +100,32 @@ class _MyTaskState extends State<MyTask> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            Text(
-              "See All",
-              style: TextStyle(
-                fontSize: 12,
-                fontFamily: 'PoppinsStyle',
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w100,
+            FlatButton(
+              textColor: Colors.grey,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              child: Text(
+                "See All",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                  fontFamily: 'PoppinsStyle',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w100,
+                ),
               ),
+              onPressed: () {
+                setState(() {
+                  visibilityCard = !visibilityCard;
+                });
+              },
             ),
           ],
         ),
-        SizedBox(height: 15.0),
-        Column(
-          children: [
-            cardGardenList(),
-            cardGardenList(),
-            cardGardenList(),
-          ],
-        ),
+        // SizedBox(height: 10.0),
+        cardGardenList(),
+        if (!this.visibilityCard)
+          for (int i = 0; i < 2; i++) cardGardenList(),
       ],
     );
   }
