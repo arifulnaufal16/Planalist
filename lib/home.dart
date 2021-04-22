@@ -1,5 +1,6 @@
 import 'package:Planalist/task/myTask.dart';
 import 'package:Planalist/profile/myProfile.dart';
+import 'package:Planalist/garden/myGarden.dart';
 import 'package:Planalist/planalist_icon_icons.dart';
 import 'package:Planalist/profile/myProfileSetting.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final listPage = <Widget>[
       MyTask(),
-      Text('Reminder'),
+      MyGarden(),
       MyProfile(),
     ];
 
