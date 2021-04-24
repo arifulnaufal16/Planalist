@@ -98,6 +98,44 @@ class _LoginState extends State<Login> {
     );
   }
 
+  Widget buttonLoginWithGoogle() {
+    return Container(
+      child: FlatButton.icon(
+        // onPressed: () {},
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+                child: Home(),
+                ctx: context),
+          );
+        },
+        icon: Image(
+          image: AssetImage('image/google.png'),
+        ),
+        label: Text(
+          "Login with google",
+          style: TextStyle(
+            fontSize: 15.0,
+            color: Colors.black,
+            fontFamily: 'PoppinsStyle',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
+        color: Colors.white,
+        splashColor: Colors.grey.shade200,
+        height: 36,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black),
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    );
+  }
+
   Widget titleBar() {
     return Container(
       child: Text(
@@ -184,7 +222,22 @@ class _LoginState extends State<Login> {
               SizedBox(height: 12.0),
               formTextPassword(),
               SizedBox(height: 32.0),
-              buttonLogin()
+              buttonLogin(),
+              SizedBox(height: 12.0),
+              Center(
+                child: Text(
+                  "Or",
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.black,
+                    fontFamily: 'PoppinsStyle',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.0),
+              buttonLoginWithGoogle(),
             ],
           ),
         ),

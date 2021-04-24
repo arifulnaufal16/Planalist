@@ -1,4 +1,7 @@
+import 'package:Planalist/garden/addPlant.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'myTreeDetails.dart';
 
 class MyGardenDetails extends StatefulWidget {
   @override
@@ -139,12 +142,19 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                     SizedBox(height: 20),
                                     Container(
                                       decoration: BoxDecoration(
-                                          color: Colors.grey.shade300,
+                                          color: Colors.grey.shade200,
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: TextFormField(
                                         cursorColor: Colors.black,
                                         decoration: InputDecoration(
+                                          prefixIcon: Container(
+                                            // add padding to adjust icon
+                                            child: Icon(
+                                              Icons.search,
+                                              color: Colors.grey.shade500,
+                                            ),
+                                          ),
                                           contentPadding: EdgeInsets.symmetric(
                                             vertical: 0.0,
                                             horizontal: 20,
@@ -164,7 +174,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: 5),
                                     Container(
                                       child: Divider(
                                         indent: 20,
@@ -172,6 +182,44 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                         thickness: 5,
                                       ),
                                     ),
+                                    SizedBox(height: 5),
+                                    Center(
+                                      child: ButtonTheme(
+                                        minWidth:
+                                            MediaQuery.of(context).size.width,
+                                        child: RaisedButton(
+                                          // onPressed: () {},
+
+                                          onPressed: () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              PageTransition(
+                                                  type: PageTransitionType.fade,
+                                                  duration: Duration(
+                                                      milliseconds: 500),
+                                                  child: AddPlant(),
+                                                  ctx: context),
+                                            );
+                                          },
+                                          color: Colors.green,
+                                          splashColor: Colors.green,
+                                          child: Text(
+                                            "Add Plant",
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                color: Colors.white,
+                                                fontFamily: 'PoppinsStyle',
+                                                fontStyle: FontStyle.normal,
+                                                fontWeight: FontWeight.w100),
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
                                     Expanded(
                                       child: MediaQuery.removePadding(
                                         context: context,
@@ -199,7 +247,19 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                     splashColor: Colors.blue
                                                         .withAlpha(30),
                                                     onTap: () {
-                                                      print('Card tapped.');
+                                                      Navigator.push(
+                                                        context,
+                                                        PageTransition(
+                                                            type:
+                                                                PageTransitionType
+                                                                    .fade,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    800),
+                                                            child:
+                                                                MyTreeDetails(),
+                                                            ctx: context),
+                                                      );
                                                     },
                                                     child: Container(
                                                       padding:
