@@ -191,7 +191,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                           // onPressed: () {},
 
                                           onPressed: () {
-                                            Navigator.pushReplacement(
+                                            Navigator.push(
                                               context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,
