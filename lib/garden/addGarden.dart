@@ -1,17 +1,14 @@
 import 'dart:io';
-import 'package:Planalist/home.dart';
-import 'package:custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 
-class AddPlant extends StatefulWidget {
+class AddGarden extends StatefulWidget {
   @override
-  _AddPlantState createState() => _AddPlantState();
+  _AddGardenState createState() => _AddGardenState();
 }
 
-class _AddPlantState extends State<AddPlant> {
-  int _checkboxValue;
+class _AddGardenState extends State<AddGarden> {
   File _image;
   _imgFromCamera() async {
     File image = await ImagePicker.pickImage(
@@ -111,7 +108,7 @@ class _AddPlantState extends State<AddPlant> {
               ),
               SizedBox(height: 10),
               Container(
-                child: Text("No."),
+                child: Text("Name"),
               ),
               SizedBox(height: 10),
               Container(
@@ -122,7 +119,7 @@ class _AddPlantState extends State<AddPlant> {
                     border: InputBorder.none,
                     fillColor: Colors.transparent,
                     filled: true,
-                    labelText: "No.Tanaman",
+                    labelText: "Name",
                     labelStyle: TextStyle(
                         color:
                             FocusNode().hasFocus ? Colors.blue : Colors.grey),
@@ -139,28 +136,33 @@ class _AddPlantState extends State<AddPlant> {
               ),
               SizedBox(height: 20),
               Container(
-                child: Text("Jenis Pohon"),
+                child: Text("Deskripsi"),
               ),
               SizedBox(height: 10),
               Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: CustomDropdown(
-                  valueIndex: _checkboxValue,
-                  hint: "Garden",
-                  disabledColor: Colors.grey.shade100,
-                  enabledColor: Colors.grey.shade200,
-                  items: [
-                    CustomDropdownItem(text: "General"),
-                    CustomDropdownItem(text: "Garden"),
-                    CustomDropdownItem(text: "Other"),
-                  ],
-                  onChanged: (newValue) {
-                    setState(() => _checkboxValue = newValue);
-                  },
+                height: 100,
+                child: TextField(
+                  maxLines: 5,
+                  autofocus: false,
+                  style: TextStyle(fontSize: 15.0, color: Colors.black),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    fillColor: Colors.transparent,
+                    labelText: "Description",
+                    labelStyle: TextStyle(
+                        color:
+                            FocusNode().hasFocus ? Colors.blue : Colors.grey),
+                    contentPadding: const EdgeInsets.only(
+                        left: 14.0, bottom: 6.0, top: 8.0),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -171,17 +173,16 @@ class _AddPlantState extends State<AddPlant> {
                     child: Container(
                       padding: EdgeInsets.only(left: 10),
                       width: MediaQuery.of(context).size.width / 2,
-                      child: Text("Tinggi"),
+                      child: Text("Pohon"),
                     ),
                   ),
                   Flexible(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: Text("Diameter"),
-                    ),
-                  ),
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10),
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Text("Buah"),
+                      )),
                 ],
               ),
               SizedBox(height: 10),
@@ -195,7 +196,7 @@ class _AddPlantState extends State<AddPlant> {
                         border: InputBorder.none,
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: "Height",
+                        labelText: "Tree",
                         labelStyle: TextStyle(
                             color: FocusNode().hasFocus
                                 ? Colors.blue
@@ -219,7 +220,7 @@ class _AddPlantState extends State<AddPlant> {
                         border: InputBorder.none,
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: "Diameter",
+                        labelText: "Fruits",
                         labelStyle: TextStyle(
                             color: FocusNode().hasFocus
                                 ? Colors.blue
@@ -250,7 +251,7 @@ class _AddPlantState extends State<AddPlant> {
                         PageTransition(
                             type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 500),
-                            // child: Home(),
+                            // child: AddGarden(),
                             ctx: context),
                       );
                     },
@@ -287,7 +288,7 @@ class _AddPlantState extends State<AddPlant> {
           Icons.navigate_before,
           color: Colors.black,
         ),
-        title: Text("Add Plant", style: header),
+        title: Text("Add Garden", style: header),
         actions: [
           Icon(
             Icons.more_vert,
@@ -299,5 +300,3 @@ class _AddPlantState extends State<AddPlant> {
     ));
   }
 }
-
-class _checkboxValue {}
