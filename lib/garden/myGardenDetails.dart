@@ -1,18 +1,35 @@
 import 'package:Planalist/garden/addGarden.dart';
 import 'package:Planalist/garden/addPlant.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'myTreeDetails.dart';
 
 class MyGardenDetails extends StatefulWidget {
   @override
   _MyGardenDetailsState createState() => _MyGardenDetailsState();
+  final int garden_id;
+  final String garden_name;
+  final int index = 0;
+  MyGardenDetails(this.garden_id, this.garden_name);
+}
+
+class Plant {
+  final String plant_type;
+  final int plant_id;
+  Plant({this.plant_id, this.plant_type});
+  factory Plant.fromJson(Map<String, dynamic> json) {
+    return Plant(
+      plant_id: json['plant_id'],
+      plant_type: json['plant_type'],
+    );
+  }
 }
 
 class _MyGardenDetailsState extends State<MyGardenDetails> {
   final ValueNotifier<double> headerNegativeOffset = ValueNotifier<double>(0);
   final ValueNotifier<bool> appbarShadow = ValueNotifier<bool>(false);
-
   final double maxHeaderHeight = 250.0;
   final double minHeaderHeight = 56.0;
   final double bodyContentRatioMin = 0.6;
@@ -28,11 +45,39 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
     super.dispose();
   }
 
-  @override
+  List data;
+  List plants;
+  // Future<List<MyGardenDetails>> getGardenDetails() async {
+  //   int garden_id = widget.garden_id;
+  //   http.Response response = await http
+  //       .get('http://192.168.43.4:3000/api/gardens/$garden_id/plants');
+
+  //   data = json.decode(response.body);
+  //   debugPrint(response.body);
+  // }
+
+  Future<List<Plant>> plant() async {
+    int garden_id = widget.garden_id;
+    http.Response response = await http
+        .get('http://192.168.43.4:3000/api/gardens/$garden_id/plants');
+
+    data = json.decode(response.body);
+    plants = data.map((plants) => new Plant.fromJson(plants)).toList();
+    debugPrint(response.body);
+    setState(() {
+      // print(garden[0].company);
+      return plants;
+    });
+  }
+
+  void initState() {
+    super.initState();
+    plant();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       //just for status bar color
-
       body: Stack(
         children: <Widget>[
           Stack(children: [
@@ -130,7 +175,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                     SizedBox(height: 10),
                                     Container(
                                       child: Text(
-                                        "Garden Ciputat",
+                                        widget.garden_name,
                                         style: TextStyle(
                                           color: Colors.green,
                                           fontSize: 16,
@@ -227,7 +272,9 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                         removeTop: true,
                                         child: ListView.builder(
                                           controller: scrollController,
-                                          itemCount: 20,
+                                          itemCount: plants == null
+                                              ? 0
+                                              : plants.length,
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return Container(
@@ -291,10 +338,11 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text(
-                                                                  "#01 Durian"),
-                                                              Text(
-                                                                  "Kebon Durian Jaksel"),
+                                                              Text(plants[index]
+                                                                  .plant_id
+                                                                  .toString()),
+                                                              Text(plants[index]
+                                                                  .plant_type),
                                                             ],
                                                           )
                                                         ],
