@@ -28,7 +28,7 @@ class _MyGardenState extends State<MyGarden> {
     data = json.decode(response.body);
     garden = data.map((garden) => new MyGarden.fromJson(garden)).toList();
     setState(() {
-      print(garden[0].garden_name);
+      print(garden);
       return garden;
     });
   }

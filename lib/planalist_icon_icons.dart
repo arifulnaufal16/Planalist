@@ -31,3 +31,12 @@ class PlanalistIcon {
   static const IconData menu = IconData(0xe807, fontFamily: _kFontFam);
   static const IconData home = IconData(0xe808, fontFamily: _kFontFam);
 }
+
+class PlanalistIconUpdate {
+  PlanalistIconUpdate._();
+
+  static const _kFontFam = 'PlanalistIconUpdate';
+  static const String _kFontPkg = null;
+
+  static const IconData vector = IconData(0xe800, fontFamily: _kFontFam);
+}

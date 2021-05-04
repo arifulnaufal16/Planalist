@@ -1,3 +1,4 @@
+import 'package:Planalist/garden/addGarden.dart';
 import 'package:Planalist/task/myTask.dart';
 import 'package:Planalist/profile/myProfile.dart';
 import 'package:Planalist/garden/myGarden.dart';
@@ -76,6 +77,26 @@ class _HomeState extends State<Home> {
             ),
           ),
           actions: [
+            if (selectedTabIndex == 1)
+              Container(
+                padding: EdgeInsets.only(right: 10),
+                child: IconButton(
+                  icon: Icon(
+                    PlanalistIconUpdate.vector,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 800),
+                          child: AddGarden(),
+                          ctx: context),
+                    );
+                  },
+                ),
+              ),
             if (selectedTabIndex == 2)
               Container(
                 padding: EdgeInsets.only(right: 10),

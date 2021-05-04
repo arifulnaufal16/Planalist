@@ -1,5 +1,6 @@
 import 'package:Planalist/garden/addGarden.dart';
 import 'package:Planalist/garden/addPlant.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,10 +21,26 @@ class Plant {
   final int plant_id;
   Plant({this.plant_id, this.plant_type});
   factory Plant.fromJson(Map<String, dynamic> json) {
-    return Plant(
+    return new Plant(
       plant_id: json['plant_id'],
       plant_type: json['plant_type'],
     );
+  }
+}
+
+class Garden {
+  final int garden_id;
+  final String garden_name;
+  final List<Plant> plants;
+  Garden({this.garden_id, this.garden_name, this.plants});
+  factory Garden.fromJson(Map<String, dynamic> json) {
+    return Garden(
+        garden_id: json["garden_id"],
+        garden_name: json["garden_name"],
+        plants: List<Plant>.from(
+            json['plants'].map((plants) => Plant.fromJson(plants)))
+        // plants: Plant.fromJson(json['plants']),
+        );
   }
 }
 
@@ -45,8 +62,6 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
     super.dispose();
   }
 
-  List data;
-  List plants;
   // Future<List<MyGardenDetails>> getGardenDetails() async {
   //   int garden_id = widget.garden_id;
   //   http.Response response = await http
@@ -56,23 +71,30 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
   //   debugPrint(response.body);
   // }
 
-  Future<List<Plant>> plant() async {
+  List<Plant> _list = [];
+  List<Plant> _plants = [];
+  Future<Null> getPlant() async {
     int garden_id = widget.garden_id;
-    http.Response response = await http
+    final http.Response response = await http
         .get('http://192.168.43.4:3000/api/gardens/$garden_id/plants');
-
-    data = json.decode(response.body);
-    plants = data.map((plants) => new Plant.fromJson(plants)).toList();
-    debugPrint(response.body);
-    setState(() {
-      // print(garden[0].company);
-      return plants;
-    });
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      // for (Map i in data) {
+      //   _list.add(Garden.fromJson(i));
+      // }
+      setState(() {
+        for (var i = 0; i < data.first['plants'].length; i++) {
+          _list.add(Plant.fromJson(data.first['plants'][i]));
+          print(data.first['plants'][i]);
+        }
+        return _list;
+      });
+    }
   }
 
   void initState() {
     super.initState();
-    plant();
+    getPlant();
   }
 
   Widget build(BuildContext context) {
@@ -272,11 +294,10 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                         removeTop: true,
                                         child: ListView.builder(
                                           controller: scrollController,
-                                          itemCount: plants == null
-                                              ? 0
-                                              : plants.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
+                                          itemCount: _list.length,
+                                          itemBuilder:
+                                              (BuildContext context, int i) {
+                                            final plantgarden = _list[i];
                                             return Container(
                                               margin: EdgeInsets.symmetric(
                                                   vertical: 5),
@@ -338,11 +359,12 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text(plants[index]
+                                                              Text(plantgarden
                                                                   .plant_id
                                                                   .toString()),
-                                                              Text(plants[index]
-                                                                  .plant_type),
+                                                              Text(plantgarden
+                                                                  .plant_type
+                                                                  .toString())
                                                             ],
                                                           )
                                                         ],

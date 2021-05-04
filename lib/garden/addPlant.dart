@@ -245,13 +245,13 @@ class _AddPlantState extends State<AddPlant> {
                   child: RaisedButton(
                     // onPressed: () {},
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pop(
                         context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 500),
-                            // child: Home(),
-                            ctx: context),
+                        // PageTransition(
+                        //     type: PageTransitionType.fade,
+                        //     duration: Duration(milliseconds: 500),
+                        //     // child: Home(),
+                        //     ctx: context),
                       );
                     },
                     color: Colors.green,

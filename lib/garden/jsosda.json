@@ -1,0 +1,79 @@
+[
+    {
+        "garden_id": 1,
+        "garden_name": "cimahi",
+        "size_m2": 300,
+        "location": "kota cimahi",
+        "created_by": 1,
+        "createdAt": "2021-05-03T00:14:51.000Z",
+        "updatedAt": "2021-05-03T00:14:51.000Z",
+        "plants": [
+            {
+                "plant_id": 1,
+                "garden_id": 1,
+                "plant_code": "1",
+                "height": 10,
+                "width": 5,
+                "plant_type": "duren",
+                "created_by": 1,
+                "createdAt": "2021-05-03T01:43:14.000Z",
+                "updatedAt": "2021-05-03T01:43:14.000Z"
+            },
+            {
+                "plant_id": 2,
+                "garden_id": 1,
+                "plant_code": "2",
+                "height": 10,
+                "width": 5,
+                "plant_type": "duren",
+                "created_by": 1,
+                "createdAt": "2021-05-03T01:43:21.000Z",
+                "updatedAt": "2021-05-03T01:43:21.000Z"
+            },
+            {
+                "plant_id": 3,
+                "garden_id": 1,
+                "plant_code": "3",
+                "height": 10,
+                "width": 5,
+                "plant_type": "duren",
+                "created_by": 1,
+                "createdAt": "2021-05-03T01:43:23.000Z",
+                "updatedAt": "2021-05-03T01:43:23.000Z"
+            },
+            {
+                "plant_id": 4,
+                "garden_id": 1,
+                "plant_code": "4",
+                "height": 10,
+                "width": 5,
+                "plant_type": "duren",
+                "created_by": 3,
+                "createdAt": "2021-05-03T01:43:27.000Z",
+                "updatedAt": "2021-05-03T01:43:27.000Z"
+            },
+            {
+                "plant_id": 5,
+                "garden_id": 1,
+                "plant_code": "5",
+                "height": 10,
+                "width": 5,
+                "plant_type": "duren",
+                "created_by": 3,
+                "createdAt": "2021-05-03T01:43:33.000Z",
+                "updatedAt": "2021-05-03T01:43:33.000Z"
+            },
+            {
+                "plant_id": 6,
+                "garden_id": 1,
+                "plant_code": "6",
+                "height": 10,
+                "width": 5,
+                "plant_type": "duren",
+                "created_by": 3,
+                "createdAt": "2021-05-03T01:43:38.000Z",
+                "updatedAt": "2021-05-03T01:43:38.000Z"
+            }
+        ]
+    }
+]

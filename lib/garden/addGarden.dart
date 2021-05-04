@@ -246,13 +246,13 @@ class _AddGardenState extends State<AddGarden> {
                   child: RaisedButton(
                     // onPressed: () {},
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pop(
                         context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 500),
-                            // child: AddGarden(),
-                            ctx: context),
+                        // PageTransition(
+                        //     type: PageTransitionType.fade,
+                        //     duration: Duration(milliseconds: 500),
+                        //     // child: AddGarden(),
+                        //     ctx: context),
                       );
                     },
                     color: Colors.green,
@@ -260,11 +260,12 @@ class _AddGardenState extends State<AddGarden> {
                     child: Text(
                       "Save Garden",
                       style: TextStyle(
-                          fontSize: 15.0,
-                          color: Colors.white,
-                          fontFamily: 'PoppinsStyle',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w100),
+                        fontSize: 15.0,
+                        color: Colors.white,
+                        fontFamily: 'PoppinsStyle',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w100,
+                      ),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
