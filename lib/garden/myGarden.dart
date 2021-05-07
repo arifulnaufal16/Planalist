@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'myGardenDetails.dart';
@@ -22,9 +23,11 @@ class MyGarden extends StatefulWidget {
 class _MyGardenState extends State<MyGarden> {
   List data;
   List garden;
+
   Future<List<MyGarden>> getGarden() async {
-    http.Response response =
-        await http.get('http://192.168.43.4:3000/api/gardens');
+    String lh = main.defaultLocalhost;
+    http.Response response = await http.get('$lh/api/gardens');
+
     data = json.decode(response.body);
     garden = data.map((garden) => new MyGarden.fromJson(garden)).toList();
     setState(() {

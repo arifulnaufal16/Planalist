@@ -1,4 +1,6 @@
+import 'package:Planalist/home.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class MyTreeDetails extends StatefulWidget {
   @override
@@ -12,6 +14,26 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w100,
   );
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Edit':
+        setState(() {
+          Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 800),
+                // child: ,
+                ctx: context),
+          );
+        });
+        break;
+      case 'Delete':
+        setState(() {});
+        break;
+    }
+  }
 
   static const TextStyle boldFont = const TextStyle(
     color: Colors.black,
@@ -40,16 +62,45 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          leading: Icon(
-            Icons.navigate_before,
+          leading: IconButton(
+            icon: Icon(Icons.navigate_before),
             color: Colors.black,
+            onPressed: () {
+              Navigator.pop(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                    ctx: context),
+              );
+            },
           ),
           title: Text("Detail", style: header),
-          actions: [
-            Icon(
-              Icons.more_vert,
-              color: Colors.black,
-            )
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(
+          //       Icons.more_vert,
+          //       color: Colors.black,
+          //     ),
+
+          //   )
+          // ],
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              icon: Icon(
+                Icons.more_vert,
+                color: Colors.black,
+              ),
+              onSelected: handleClick,
+              itemBuilder: (BuildContext context) {
+                return {'Edit', 'Delete'}.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
           ],
         ),
         body: Container(

@@ -1,6 +1,7 @@
 import 'package:Planalist/garden/addGarden.dart';
 import 'package:Planalist/garden/addPlant.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:Planalist/main.dart' as main;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,11 +19,11 @@ class MyGardenDetails extends StatefulWidget {
 
 class Plant {
   final String plant_type;
-  final int plant_id;
-  Plant({this.plant_id, this.plant_type});
+  final String plant_code;
+  Plant({this.plant_code, this.plant_type});
   factory Plant.fromJson(Map<String, dynamic> json) {
     return new Plant(
-      plant_id: json['plant_id'],
+      plant_code: json['plant_code'],
       plant_type: json['plant_type'],
     );
   }
@@ -75,8 +76,9 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
   List<Plant> _plants = [];
   Future<Null> getPlant() async {
     int garden_id = widget.garden_id;
-    final http.Response response = await http
-        .get('http://192.168.43.4:3000/api/gardens/$garden_id/plants');
+    String lh = main.defaultLocalhost;
+    final http.Response response =
+        await http.get('$lh/api/gardens/$garden_id/plants');
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       // for (Map i in data) {
@@ -85,7 +87,6 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
       setState(() {
         for (var i = 0; i < data.first['plants'].length; i++) {
           _list.add(Plant.fromJson(data.first['plants'][i]));
-          print(data.first['plants'][i]);
         }
         return _list;
       });
@@ -265,7 +266,9 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                   type: PageTransitionType.fade,
                                                   duration: Duration(
                                                       milliseconds: 500),
-                                                  child: AddPlant(),
+                                                  child: AddPlant(
+                                                      widget.garden_id,
+                                                      widget.garden_name),
                                                   ctx: context),
                                             );
                                           },
@@ -359,12 +362,20 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text(plantgarden
-                                                                  .plant_id
-                                                                  .toString()),
-                                                              Text(plantgarden
-                                                                  .plant_type
-                                                                  .toString())
+                                                              plantgarden.plant_code !=
+                                                                      null
+                                                                  ? Text(plantgarden
+                                                                      .plant_code
+                                                                      .toString())
+                                                                  : Text(
+                                                                      "[Belum ada nama pohon]"),
+                                                              plantgarden.plant_code !=
+                                                                      null
+                                                                  ? Text(plantgarden
+                                                                      .plant_type
+                                                                      .toString())
+                                                                  : Text(
+                                                                      "[Belum ada tipe pohon]"),
                                                             ],
                                                           )
                                                         ],
