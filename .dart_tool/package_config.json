@@ -134,6 +134,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_date_pickers",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_date_pickers-0.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_localizations",
+      "rootUri": "file:///C:/src/flutter/packages/flutter_localizations",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-1.0.11",
       "packageUri": "lib/",
@@ -153,7 +165,7 @@
     },
     {
       "name": "group_button",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/group_button-2.1.1",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/group_button-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -356,7 +368,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-05-05T00:07:06.860671Z",
+  "generated": "2021-05-08T16:49:31.192142Z",
   "generator": "pub",
   "generatorVersion": "2.12.2"
 }

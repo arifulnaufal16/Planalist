@@ -54,6 +54,7 @@ class PostPlant {
       String created_by) async {
     String lh = main.defaultLocalhost;
     String apiURL = "$lh/api/gardens/plants";
+
     final apiResult = await http.post(apiURL, body: {
       "garden_id": garden_id,
       // "plant_id": plant_id,
@@ -63,9 +64,12 @@ class PostPlant {
       "plant_type": plant_type,
       "created_by": created_by,
     });
+
     final jsonObject = jsonEncode(apiResult.body);
     print(jsonObject);
   }
+
+  static void setState(Null Function() param0) {}
 }
 
 class _AddPlantState extends State<AddPlant> {

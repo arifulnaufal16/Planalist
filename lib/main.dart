@@ -1,5 +1,4 @@
 import 'package:Planalist/splashscreen.dart';
-import 'package:Planalist/test.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -4,6 +4,7 @@ import 'package:Planalist/profile/myProfile.dart';
 import 'package:Planalist/garden/myGarden.dart';
 import 'package:Planalist/planalist_icon_icons.dart';
 import 'package:Planalist/profile/myProfileSetting.dart';
+import 'package:Planalist/task/newTask.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -77,6 +78,26 @@ class _HomeState extends State<Home> {
             ),
           ),
           actions: [
+            if (selectedTabIndex == 0)
+              Container(
+                padding: EdgeInsets.only(right: 10),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 800),
+                          child: NewTask(),
+                          ctx: context),
+                    );
+                  },
+                ),
+              ),
             if (selectedTabIndex == 1)
               Container(
                 padding: EdgeInsets.only(right: 10),

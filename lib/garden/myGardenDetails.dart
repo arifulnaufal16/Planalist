@@ -87,6 +87,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
       setState(() {
         for (var i = 0; i < data.first['plants'].length; i++) {
           _list.add(Plant.fromJson(data.first['plants'][i]));
+          print(_list);
         }
         return _list;
       });
