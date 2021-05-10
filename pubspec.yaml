@@ -38,6 +38,8 @@ dependencies:
   intl: ^0.17.0
   flutter_date_pickers: ^0.2.4
   provider: ^5.0.0
+  flutter_bcrypt: ^1.0.5
+  dbcrypt: ^1.0.0
 
 dev_dependencies:
   flutter_test:

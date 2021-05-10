@@ -127,6 +127,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  dbcrypt:
+    dependency: "direct main"
+    description:
+      name: dbcrypt
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   dots_indicator:
     dependency: transitive
     description:
@@ -153,6 +160,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_bcrypt:
+    dependency: "direct main"
+    description:
+      name: flutter_bcrypt
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   flutter_date_pickers:
     dependency: "direct main"
     description:

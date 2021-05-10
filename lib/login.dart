@@ -1,103 +1,44 @@
+import 'dart:convert';
 import 'package:Planalist/home.dart';
 import 'package:Planalist/signup.dart';
 import 'package:Planalist/task/myTask.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:Planalist/main.dart' as main;
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
+class Loginpost {
+  final String email;
+  final String password;
+  Loginpost({this.email, this.password});
+  factory Loginpost.fromJson(Map<String, dynamic> json) {
+    return Loginpost(
+      email: json['email'],
+      password: json['password'],
+    );
+  }
+  static Future<Loginpost> connectToAPI(String email, String password) async {
+    String lh = main.defaultLocalhost;
+    String apiURL = "$lh/api/auth/signin";
+    final apiResult = await http.post(apiURL, body: {
+      "email": email,
+      "password": password,
+    });
+    if (apiResult.statusCode == 200) {
+      final jsonObject = jsonEncode(apiResult.body);
+    }
+  }
+}
+
 class _LoginState extends State<Login> {
   @override
-  Widget formTextEmail() {
-    return Container(
-      child: TextField(
-        autofocus: false,
-        style: TextStyle(
-            fontSize: 15.0,
-            color: Colors.black,
-            fontFamily: 'PoppinsStyle',
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w100),
-        decoration: InputDecoration(
-          fillColor: Colors.transparent,
-          border: InputBorder.none,
-          filled: true,
-          contentPadding:
-              const EdgeInsets.only(left: 14.0, bottom: 6.0, top: 8.0),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget formTextPassword() {
-    return Container(
-      child: TextField(
-        obscureText: true,
-        autofocus: false,
-        style: TextStyle(fontSize: 15.0, color: Colors.black),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          fillColor: Colors.transparent,
-          // hintText: 'Password',
-          filled: true,
-          contentPadding:
-              const EdgeInsets.only(left: 14.0, bottom: 6.0, top: 8.0),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buttonLogin() {
-    return Container(
-      child: RaisedButton(
-        // onPressed: () {},
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-                child: Home(),
-                ctx: context),
-          );
-        },
-        color: Colors.amberAccent,
-        splashColor: Colors.amber,
-        child: Text(
-          "Login",
-          style: TextStyle(
-              fontSize: 15.0,
-              color: Colors.black,
-              fontFamily: 'PoppinsStyle',
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w100),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-      ),
-    );
-  }
-
   Widget buttonLoginWithGoogle() {
     return Container(
       child: FlatButton.icon(
@@ -179,6 +120,10 @@ class _LoginState extends State<Login> {
   }
 
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+
+    String email;
+    String password;
     return MaterialApp(
       home: Scaffold(
         appBar: PreferredSize(
@@ -201,44 +146,148 @@ class _LoginState extends State<Login> {
             ),
           ),
         ),
-        body: Container(
-          margin: EdgeInsets.all(20),
-          child: ListView(
-            children: [
-              SizedBox(height: 5.0),
-              Text("Email",
-                  style: TextStyle(
-                      fontFamily: 'PoppinsStyle',
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w100)),
-              SizedBox(height: 12.0),
-              formTextEmail(),
-              SizedBox(height: 22.0),
-              Text("Password",
-                  style: TextStyle(
-                      fontFamily: 'PoppinsStyle',
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w100)),
-              SizedBox(height: 12.0),
-              formTextPassword(),
-              SizedBox(height: 32.0),
-              buttonLogin(),
-              SizedBox(height: 12.0),
-              Center(
-                child: Text(
-                  "Or",
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    color: Colors.black,
-                    fontFamily: 'PoppinsStyle',
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w100,
+        body: Form(
+          key: formKey,
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: ListView(
+              children: [
+                SizedBox(height: 5.0),
+                Text("Email",
+                    style: TextStyle(
+                        fontFamily: 'PoppinsStyle',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w100)),
+                SizedBox(height: 12.0),
+                Container(
+                  child: TextFormField(
+                    onSaved: (value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                    autofocus: false,
+                    style: TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontFamily: 'PoppinsStyle',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w100),
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      border: InputBorder.none,
+                      filled: true,
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 6.0, top: 8.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 12.0),
-              buttonLoginWithGoogle(),
-            ],
+                SizedBox(height: 22.0),
+                Text("Password",
+                    style: TextStyle(
+                        fontFamily: 'PoppinsStyle',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w100)),
+                SizedBox(height: 12.0),
+                Container(
+                  child: TextFormField(
+                    onSaved: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                    obscureText: true,
+                    autofocus: false,
+                    style: TextStyle(fontSize: 15.0, color: Colors.black),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      fillColor: Colors.transparent,
+                      // hintText: 'Password',
+                      filled: true,
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 6.0, top: 8.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 32.0),
+                Container(
+                  child: RaisedButton(
+                    // onPressed: () {},
+                    // onPressed: () {
+                    //   Navigator.pushReplacement(
+                    //     context,
+                    //     PageTransition(
+                    //         type: PageTransitionType.fade,
+                    //         duration: Duration(milliseconds: 500),
+                    //         child: Home(),
+                    //         ctx: context),
+                    //   );
+                    // },
+                    onPressed: () {
+                      formKey.currentState.save();
+                      Loginpost.connectToAPI("$email", "$password");
+                      print(email);
+                      Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: Home(),
+                            duration: Duration(milliseconds: 500),
+                            ctx: context),
+                      );
+
+                      // print(widget.plant_length);
+                      // print(plant_code.runtimeType);
+                    },
+                    color: Colors.amberAccent,
+                    splashColor: Colors.amber,
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                          fontSize: 15.0,
+                          color: Colors.black,
+                          fontFamily: 'PoppinsStyle',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w100),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12.0),
+                Center(
+                  child: Text(
+                    "Or",
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontFamily: 'PoppinsStyle',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12.0),
+                buttonLoginWithGoogle(),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: Container(

@@ -32,28 +32,43 @@ class PostTask {
   final String treatment;
   final String annotation;
   final String status;
+  final String start_date;
+  final String end_date;
+  final String created_by;
+
   PostTask(
       {this.garden_id,
       this.task_type,
       this.treatment,
       this.annotation,
-      this.status});
+      this.status,
+      this.start_date,
+      this.end_date,
+      this.created_by});
   factory PostTask.fromJson(Map<String, dynamic> json) {
     return PostTask(
-        garden_id: json["garden_id"],
-        // plant_id: json["plant_id"],
-        task_type: json["task_type"],
-        treatment: json["treatment"],
-        annotation: json["annotation"],
-        status: json["status"]);
+      garden_id: json["garden_id"],
+      // plant_id: json["plant_id"],
+      task_type: json["task_type"],
+      treatment: json["treatment"],
+      annotation: json["annotation"],
+      status: json["status"],
+      start_date: json["start_date"],
+      end_date: json["end_date"],
+      created_by: json["created_by"],
+    );
   }
   static Future<PostTask> connectToAPI(
-      String garden_id,
-      // String plant_id,
-      String task_type,
-      String treatment,
-      String annotation,
-      String status) async {
+    String garden_id,
+    // String plant_id,
+    String task_type,
+    String treatment,
+    String annotation,
+    String status,
+    String start_date,
+    String end_date,
+    String created_by,
+  ) async {
     String lh = main.defaultLocalhost;
     String apiURL = "$lh/api/tasks";
     final apiResult = await http.post(apiURL, body: {
@@ -63,6 +78,9 @@ class PostTask {
       "treatment": treatment,
       "annotation": annotation,
       "status": status,
+      "start_date": start_date,
+      "end_date": end_date,
+      "created_by": created_by,
     });
     final jsonObject = jsonEncode(apiResult.body);
     print(jsonObject);
@@ -80,18 +98,49 @@ class _NewTaskState extends State<NewTask> {
   String treatment;
   String annotation;
   String status;
+  String created_by;
+  DateTime selectedDateNow = DateTime.now();
+  DateTime selectedDateEnd = DateTime.now();
+
+  String startdate;
+  String enddate;
 
   List data;
   List garden;
   Future<List<Garden>> getGardens() async {
     String lh = main.defaultLocalhost;
     http.Response response = await http.get('$lh/api/gardens');
-
     data = json.decode(response.body);
     garden = data.map((garden) => Garden.fromJson(garden)).toList();
     setState(() {
       return garden;
     });
+  }
+
+  _selectDateNow(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateNow, // Refer step 1
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDateNow)
+      setState(() {
+        selectedDateNow = picked;
+      });
+  }
+
+  _selectDateEnd(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateEnd, // Refer step 1
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDateEnd)
+      setState(() {
+        selectedDateEnd = picked;
+      });
   }
 
   List<String> jenisKegiatan = ['Pemberian Pupuk', 'Pemberian Obat'];
@@ -148,7 +197,7 @@ class _NewTaskState extends State<NewTask> {
                       onPressed: () {
                         formKey.currentState.save();
                         PostTask.connectToAPI(garden_id, task_type, treatment,
-                            annotation, "Assigned");
+                            annotation, "Assigned", startdate, enddate, "1");
                         Navigator.pop(
                           context,
                           PageTransition(
@@ -198,7 +247,7 @@ class _NewTaskState extends State<NewTask> {
                           onChanged: (newValue) {
                             setState(() {
                               _kebun = newValue;
-                              garden_id = garden[_kebun].garden_name;
+                              garden_id = garden[_kebun].garden_id.toString();
                               print(garden_id);
                             });
                           },
@@ -323,6 +372,91 @@ class _NewTaskState extends State<NewTask> {
                         ),
                       ),
                       SizedBox(height: 20),
+                      Text("Rentang Mulai"),
+                      SizedBox(height: 5),
+                      Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: RaisedButton(
+                          onPressed: () {
+                            _selectDateNow(context);
+                            startdate =
+                                "${selectedDateNow.toLocal()}".split(' ')[0];
+                            print(startdate);
+                          }, // Refer step 3
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.calendar_today_rounded),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "${selectedDateNow.toLocal()}".split(' ')[0],
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          color: Colors.grey.shade200,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text("Rentang Selesai"),
+                      SizedBox(height: 5),
+                      Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: RaisedButton(
+                          onPressed: () {
+                            _selectDateEnd(context);
+                            enddate =
+                                "${selectedDateEnd.toLocal()}".split(' ')[0];
+                            print(enddate);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.calendar_today_rounded),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "${selectedDateEnd.toLocal()}".split(' ')[0],
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          color: Colors.grey.shade200,
+                        ),
+                      ),
+                      // Column(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: <Widget>[
+                      //     Text(
+                      //       "${selectedDate.toLocal()}".split(' ')[0],
+                      //       style: TextStyle(
+                      //           fontSize: 55, fontWeight: FontWeight.bold),
+                      //     ),
+                      //     SizedBox(
+                      //       height: 20.0,
+                      //     ),
+                      //     RaisedButton(
+                      //       onPressed: () =>
+                      //           _selectDate(context), // Refer step 3
+                      //       child: Text(
+                      //         'Select date',
+                      //         style: TextStyle(
+                      //             color: Colors.black,
+                      //             fontWeight: FontWeight.bold),
+                      //       ),
+                      //       color: Colors.greenAccent,
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

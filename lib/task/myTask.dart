@@ -138,7 +138,6 @@ class _MyTaskState extends State<MyTask> {
   //   );
   // }
 
-  @override
   int _selectedIndexs = 0;
   int card = 0;
   List data;
@@ -192,7 +191,6 @@ class _MyTaskState extends State<MyTask> {
   }
 
   Widget build(BuildContext context) {
-    int gardens;
     return MaterialApp(
       home: Scaffold(
           body: ListView(
@@ -272,7 +270,6 @@ class _MyTaskState extends State<MyTask> {
                 String t = _task[i].treatment;
                 String a = _task[i].annotation;
                 String stat = _task[i].status;
-
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                   child: Container(
