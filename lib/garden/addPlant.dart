@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Planalist/garden/myGardenDetails.dart';
 import 'package:Planalist/main.dart' as main;
+import 'package:http/http.dart' as http;
 import 'package:custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 
 class AddPlant extends StatefulWidget {

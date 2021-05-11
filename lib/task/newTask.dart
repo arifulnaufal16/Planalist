@@ -112,9 +112,7 @@ class _NewTaskState extends State<NewTask> {
     http.Response response = await http.get('$lh/api/gardens');
     data = json.decode(response.body);
     garden = data.map((garden) => Garden.fromJson(garden)).toList();
-    setState(() {
-      return garden;
-    });
+    setState(() {});
   }
 
   _selectDateNow(BuildContext context) async {
@@ -162,7 +160,7 @@ class _NewTaskState extends State<NewTask> {
 
   @override
   Widget build(BuildContext context) {
-    int x = garden.length != null ? garden.length : 0;
+    int x = garden != null ? garden.length : 0;
     return MaterialApp(
       home: Form(
         key: formKey,
@@ -236,22 +234,26 @@ class _NewTaskState extends State<NewTask> {
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: CustomDropdown(
-                          openColor: Colors.grey.shade100,
-                          valueIndex: _kebun,
-                          hint: "Nama Kebun",
-                          items: [
-                            for (int i = 0; i < x; i++)
-                              CustomDropdownItem(text: garden[i].garden_name),
-                          ],
-                          onChanged: (newValue) {
-                            setState(() {
-                              _kebun = newValue;
-                              garden_id = garden[_kebun].garden_id.toString();
-                              print(garden_id);
-                            });
-                          },
-                        ),
+                        child: x == 0
+                            ? Container()
+                            : CustomDropdown(
+                                openColor: Colors.grey.shade100,
+                                valueIndex: _kebun,
+                                hint: "Nama Kebun",
+                                items: [
+                                  for (int i = 0; i < x; i++)
+                                    CustomDropdownItem(
+                                        text: garden[i].garden_name),
+                                ],
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _kebun = newValue;
+                                    garden_id =
+                                        garden[_kebun].garden_id.toString();
+                                    print(garden_id);
+                                  });
+                                },
+                              ),
                       ),
                       SizedBox(height: 20),
                       Text("Jenis Kegiatan"),

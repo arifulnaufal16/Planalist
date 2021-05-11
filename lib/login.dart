@@ -9,31 +9,27 @@ import 'package:page_transition/page_transition.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 
+int authentication;
+
 class Login extends StatefulWidget {
-  @override
   _LoginState createState() => _LoginState();
 }
 
 class Loginpost {
   final String email;
   final String password;
-  Loginpost({this.email, this.password});
+  final String user_id;
+  Loginpost({
+    this.email,
+    this.password,
+    this.user_id,
+  });
   factory Loginpost.fromJson(Map<String, dynamic> json) {
     return Loginpost(
       email: json['email'],
       password: json['password'],
+      user_id: json['user_id'],
     );
-  }
-  static Future<Loginpost> connectToAPI(String email, String password) async {
-    String lh = main.defaultLocalhost;
-    String apiURL = "$lh/api/auth/signin";
-    final apiResult = await http.post(apiURL, body: {
-      "email": email,
-      "password": password,
-    });
-    if (apiResult.statusCode == 200) {
-      final jsonObject = jsonEncode(apiResult.body);
-    }
   }
 }
 
@@ -43,16 +39,16 @@ class _LoginState extends State<Login> {
     return Container(
       child: FlatButton.icon(
         // onPressed: () {},
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-                child: Home(),
-                ctx: context),
-          );
-        },
+        // onPressed: () {
+        //   Navigator.pushReplacement(
+        //     context,
+        //     PageTransition(
+        //         type: PageTransitionType.fade,
+        //         duration: Duration(milliseconds: 500),
+        //         child: Home(),
+        //         ctx: context),
+        //   );
+        // },
         icon: Image(
           image: AssetImage('image/google.png'),
         ),
@@ -120,8 +116,32 @@ class _LoginState extends State<Login> {
   }
 
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
+    Future<Loginpost> connectToAPI(String email, String password) async {
+      String lh = main.defaultLocalhost;
+      String apiURL = "$lh/api/auth/signin";
+      final apiResult = await http.post(apiURL, body: {
+        "email": email,
+        "password": password,
+      });
+      if (apiResult.statusCode == 200) {
+        final jsonObject = jsonDecode(apiResult.body);
+        print(jsonObject);
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 500),
+            child: Home(),
+          ),
+        );
+      } else {
+        setState(() {
+          authentication = 0;
+        });
+      }
+    }
 
+    final formKey = GlobalKey<FormState>();
     String email;
     String password;
     return MaterialApp(
@@ -146,150 +166,176 @@ class _LoginState extends State<Login> {
             ),
           ),
         ),
-        body: Form(
-          key: formKey,
-          child: Container(
-            margin: EdgeInsets.all(20),
-            child: ListView(
-              children: [
-                SizedBox(height: 5.0),
-                Text("Email",
-                    style: TextStyle(
-                        fontFamily: 'PoppinsStyle',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w100)),
-                SizedBox(height: 12.0),
-                Container(
-                  child: TextFormField(
-                    onSaved: (value) {
-                      setState(() {
-                        email = value;
-                      });
-                    },
-                    autofocus: false,
-                    style: TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.black,
-                        fontFamily: 'PoppinsStyle',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w100),
-                    decoration: InputDecoration(
-                      fillColor: Colors.transparent,
-                      border: InputBorder.none,
-                      filled: true,
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 6.0, top: 8.0),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 22.0),
-                Text("Password",
-                    style: TextStyle(
-                        fontFamily: 'PoppinsStyle',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w100)),
-                SizedBox(height: 12.0),
-                Container(
-                  child: TextFormField(
-                    onSaved: (value) {
-                      setState(() {
-                        password = value;
-                      });
-                    },
-                    obscureText: true,
-                    autofocus: false,
-                    style: TextStyle(fontSize: 15.0, color: Colors.black),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      fillColor: Colors.transparent,
-                      // hintText: 'Password',
-                      filled: true,
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 6.0, top: 8.0),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 32.0),
-                Container(
-                  child: RaisedButton(
-                    // onPressed: () {},
-                    // onPressed: () {
-                    //   Navigator.pushReplacement(
-                    //     context,
-                    //     PageTransition(
-                    //         type: PageTransitionType.fade,
-                    //         duration: Duration(milliseconds: 500),
-                    //         child: Home(),
-                    //         ctx: context),
-                    //   );
-                    // },
-                    onPressed: () {
-                      formKey.currentState.save();
-                      Loginpost.connectToAPI("$email", "$password");
-                      print(email);
-                      Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: Home(),
-                            duration: Duration(milliseconds: 500),
-                            ctx: context),
-                      );
-
-                      // print(widget.plant_length);
-                      // print(plant_code.runtimeType);
-                    },
-                    color: Colors.amberAccent,
-                    splashColor: Colors.amber,
-                    child: Text(
-                      "Login",
+        body: Builder(builder: (context) {
+          return Form(
+            key: formKey,
+            child: Container(
+              margin: EdgeInsets.all(20),
+              child: ListView(
+                children: [
+                  SizedBox(height: 5.0),
+                  Text("Email",
+                      style: TextStyle(
+                          fontFamily: 'PoppinsStyle',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w100)),
+                  SizedBox(height: 12.0),
+                  Container(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Masukkan email anda';
+                        }
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          email = value;
+                        });
+                      },
+                      autofocus: false,
                       style: TextStyle(
                           fontSize: 15.0,
                           color: Colors.black,
                           fontFamily: 'PoppinsStyle',
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w100),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                      decoration: InputDecoration(
+                        fillColor: Colors.transparent,
+                        border: InputBorder.none,
+                        filled: true,
+                        contentPadding: const EdgeInsets.only(
+                            left: 14.0, bottom: 6.0, top: 8.0),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 12.0),
-                Center(
-                  child: Text(
-                    "Or",
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.black,
-                      fontFamily: 'PoppinsStyle',
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w100,
+                  SizedBox(height: 22.0),
+                  Text("Password",
+                      style: TextStyle(
+                          fontFamily: 'PoppinsStyle',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w100)),
+                  SizedBox(height: 12.0),
+                  Container(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Masukkan password anda';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          password = value;
+                        });
+                      },
+                      obscureText: true,
+                      autofocus: false,
+                      style: TextStyle(fontSize: 15.0, color: Colors.black),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        fillColor: Colors.transparent,
+                        // hintText: 'Password',
+                        filled: true,
+                        contentPadding: const EdgeInsets.only(
+                            left: 14.0, bottom: 6.0, top: 8.0),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 12.0),
-                buttonLoginWithGoogle(),
-              ],
+                  SizedBox(height: 32.0),
+                  Container(
+                    child: RaisedButton(
+                      // onPressed: () {},
+                      // onPressed: () {
+                      //   Navigator.pushReplacement(
+                      //     context,
+                      //     PageTransition(
+                      //         type: PageTransitionType.fade,
+                      //         duration: Duration(milliseconds: 500),
+                      //         child: Home(),
+                      //         ctx: context),
+                      //   );
+                      // },
+                      onPressed: () {
+                        print(authentication);
+                        if (formKey.currentState.validate() == true) {
+                          formKey.currentState.save();
+                          connectToAPI("$email", "$password");
+                          if (authentication == 0) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text('Email atau password anda salah')));
+                          }
+                        }
+                      },
+
+                      color: Colors.amberAccent,
+                      splashColor: Colors.amber,
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            color: Colors.black,
+                            fontFamily: 'PoppinsStyle',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w100),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12.0),
+                  Center(
+                    child: Text(
+                      "Or",
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontFamily: 'PoppinsStyle',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12.0),
+                  buttonLoginWithGoogle(),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        }),
         bottomNavigationBar: Container(
           alignment: Alignment.center,
           height: 50,

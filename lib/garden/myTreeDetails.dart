@@ -1,13 +1,59 @@
-import 'package:Planalist/home.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:Planalist/main.dart' as main;
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
 class MyTreeDetails extends StatefulWidget {
   @override
   _MyTreeDetailsState createState() => _MyTreeDetailsState();
+  final String plant_id;
+  final String garden_name;
+  MyTreeDetails(this.plant_id, this.garden_name);
 }
 
+class Plant {
+  final String plant_code;
+  final int height;
+  final int width;
+  final String plant_type;
+  final String status;
+  Plant(
+      {this.plant_code, this.height, this.width, this.plant_type, this.status});
+  factory Plant.fromJson(Map<String, dynamic> json) {
+    return new Plant(
+      plant_code: json['plant_code'],
+      height: json['height'],
+      width: json['width'],
+      plant_type: json['plant_type'],
+      status: json['status'],
+    );
+  }
+}
+
+Plant plants = new Plant();
+
 class _MyTreeDetailsState extends State<MyTreeDetails> {
+  List _plant;
+  Future<Plant> getPlant(String pid) async {
+    List<Plant> _data1 = [];
+    String lh = main.defaultLocalhost;
+    final http.Response response =
+        await http.get('$lh/api/gardens/plants/$pid');
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userMap = jsonDecode(response.body);
+      plants = Plant.fromJson(userMap);
+      setState(() {});
+      // print(plants.height);
+    }
+  }
+
+  void initState() {
+    super.initState();
+    getPlant(widget.plant_id);
+  }
+
   static const TextStyle header = const TextStyle(
     color: Colors.black,
     fontFamily: 'PoppinsStyle',
@@ -56,8 +102,10 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w100,
   );
+
   @override
   Widget build(BuildContext context) {
+    print(plants.height);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -121,7 +169,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("#01 Durian", style: boldFont),
+                        Text("", style: boldFont),
                         SizedBox(height: 6),
                         Text("Kebon Durian Jaksel", style: descFont)
                       ],

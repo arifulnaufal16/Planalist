@@ -19,12 +19,14 @@ class MyGardenDetails extends StatefulWidget {
 
 class Plant {
   final String plant_type;
+  final int plant_id;
   final String plant_code;
-  Plant({this.plant_code, this.plant_type});
+  Plant({this.plant_code, this.plant_type, this.plant_id});
   factory Plant.fromJson(Map<String, dynamic> json) {
     return new Plant(
       plant_code: json['plant_code'],
       plant_type: json['plant_type'],
+      plant_id: json['plant_id'],
     );
   }
 }
@@ -79,6 +81,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
     String lh = main.defaultLocalhost;
     final http.Response response =
         await http.get('$lh/api/gardens/$garden_id/plants');
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       // for (Map i in data) {
@@ -329,8 +332,12 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                             duration: Duration(
                                                                 milliseconds:
                                                                     800),
-                                                            child:
-                                                                MyTreeDetails(),
+                                                            child: MyTreeDetails(
+                                                                plantgarden
+                                                                    .plant_id
+                                                                    .toString(),
+                                                                widget
+                                                                    .garden_name),
                                                             ctx: context),
                                                       );
                                                     },

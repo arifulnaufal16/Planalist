@@ -63,7 +63,9 @@ class _MyGardenState extends State<MyGarden> {
             height: 10,
           ),
           ListView.builder(
+            physics: ClampingScrollPhysics(),
             shrinkWrap: true,
+            scrollDirection: Axis.vertical,
             itemCount: garden == null ? 0 : garden.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
