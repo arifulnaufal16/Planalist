@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'package:Planalist/home.dart';
+import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
 class MyTreeDetails extends StatefulWidget {
@@ -19,15 +23,45 @@ class Plant {
   final int width;
   final String plant_type;
   final String status;
+  final List<Growths> growths;
   Plant(
-      {this.plant_code, this.height, this.width, this.plant_type, this.status});
+      {this.plant_code,
+      this.height,
+      this.width,
+      this.plant_type,
+      this.status,
+      this.growths});
   factory Plant.fromJson(Map<String, dynamic> json) {
+    var list = json['growths'] as List;
+    print(list.runtimeType);
+    List<Growths> growthslist = list.map((i) => Growths.fromJson(i)).toList();
     return new Plant(
       plant_code: json['plant_code'],
       height: json['height'],
       width: json['width'],
       plant_type: json['plant_type'],
       status: json['status'],
+      growths: growthslist,
+    );
+  }
+}
+
+class Growths {
+  final int growth_id;
+  final int height;
+  final int width;
+  final String status;
+  final String updatedAt;
+
+  Growths(
+      {this.growth_id, this.height, this.width, this.status, this.updatedAt});
+  factory Growths.fromJson(Map<String, dynamic> json) {
+    return new Growths(
+      growth_id: json['growth_id'],
+      height: json['height'],
+      width: json['width'],
+      status: json['status'],
+      updatedAt: json['updatedAt'],
     );
   }
 }
@@ -35,6 +69,14 @@ class Plant {
 Plant plants = new Plant();
 
 class _MyTreeDetailsState extends State<MyTreeDetails> {
+  Future<Null> deletePlant(String pid) async {
+    String lh = main.defaultLocalhost;
+    http.Response response = await http.delete('$lh/api/gardens/plants/$pid');
+    setState(() {
+      final data = jsonDecode(response.body);
+    });
+  }
+
   List _plant;
   Future<Plant> getPlant(String pid) async {
     List<Plant> _data1 = [];
@@ -45,7 +87,6 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
       Map<String, dynamic> userMap = jsonDecode(response.body);
       plants = Plant.fromJson(userMap);
       setState(() {});
-      // print(plants.height);
     }
   }
 
@@ -60,6 +101,57 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w100,
   );
+
+  Future<void> _showMyDialog(String pid) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          // title: Text('AlertDialog Title'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Kamu yakin ingin menghapus list ini?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Ya',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                deletePlant(pid);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.rightToLeft,
+                    duration: Duration(milliseconds: 800),
+                    child: Home(),
+                    ctx: context,
+                  ),
+                );
+              },
+            ),
+            TextButton(
+              child: Text('Tidak'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String convertDateFromString(String strDate) {
+    DateTime todayDate = DateTime.parse(strDate);
+    String x = (formatDate(todayDate, [yyyy, '/', mm, '/', dd]));
+    return x;
+  }
 
   void handleClick(String value) {
     switch (value) {
@@ -76,6 +168,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
         });
         break;
       case 'Delete':
+        _showMyDialog(widget.plant_id);
         setState(() {});
         break;
     }
@@ -105,7 +198,12 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
 
   @override
   Widget build(BuildContext context) {
-    print(plants.height);
+    String g = widget.garden_name;
+    String pcode = plants.plant_code;
+    String ptype = plants.plant_type;
+    String ph = plants.height.toString();
+    String pw = plants.width.toString();
+    String pstat = plants.status;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -145,6 +243,9 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                   return PopupMenuItem<String>(
                     value: choice,
                     child: Text(choice),
+                    textStyle: choice == 'Delete'
+                        ? TextStyle(color: Colors.red)
+                        : TextStyle(color: Colors.black),
                   );
                 }).toList();
               },
@@ -169,9 +270,11 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("", style: boldFont),
+                        Text("$pcode", style: boldFont),
                         SizedBox(height: 6),
-                        Text("Kebon Durian Jaksel", style: descFont)
+                        Text("Lokasi : $g", style: descFont),
+                        SizedBox(height: 6),
+                        Text("Tipe tanaman : $ptype", style: descFont),
                       ],
                     )
                   ],
@@ -204,7 +307,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                         columnWidths: const <int, TableColumnWidth>{
                           0: FlexColumnWidth(1),
                           1: FlexColumnWidth(1),
-                          2: FlexColumnWidth(2),
+                          2: FlexColumnWidth(1),
                         },
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
@@ -215,7 +318,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                 child: Container(
                                   padding: EdgeInsets.symmetric(vertical: 10),
                                   child: Text(
-                                    "Tanggal",
+                                    "Tanggal Update",
                                     style: tableFont,
                                   ),
                                 ),
@@ -233,91 +336,97 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                 child: Container(
                                   padding: EdgeInsets.symmetric(vertical: 10),
                                   child: Text(
-                                    "Kondisi",
+                                    "Status",
                                     style: tableFont,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          for (var i = 0; i < 5; i++)
-                            TableRow(
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade300,
-                                          width: 1))),
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    "14/08/2000",
-                                    style: tableFont,
+                          if (plants.growths.length != null)
+                            for (var i = 0; i < plants.growths.length; i++)
+                              TableRow(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey.shade300,
+                                            width: 1))),
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Text(
+                                      convertDateFromString(
+                                          plants.growths[i].updatedAt),
+                                      style: tableFont,
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Icon(Icons.upgrade),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text("Siram Pohon", style: tableFont),
-                                ),
-                              ],
-                            ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Text(
+                                      plants.growths[i].height.toString(),
+                                      style: tableFont,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Text(plants.growths[i].status,
+                                        style: tableFont),
+                                  ),
+                                ],
+                              ),
                         ],
                       ),
                     )
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Reminder",
-                      style: boldFont,
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Table(
-                        border: TableBorder.symmetric(),
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FlexColumnWidth(1),
-                          1: FlexColumnWidth(1),
-                        },
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        children: <TableRow>[
-                          for (var i = 0; i < 5; i++)
-                            TableRow(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 20),
-                                  child: Text(
-                                    "14/08/2000",
-                                    style: tableFont,
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 20),
-                                  child: Text(
-                                    "Siram Pohon",
-                                    style: tableFont,
-                                  ),
-                                ),
-                              ],
-                            ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )
+              // Container(
+              //   padding: EdgeInsets.symmetric(vertical: 10),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         "Reminder",
+              //         style: boldFont,
+              //       ),
+              //       SizedBox(height: 10),
+              //       Container(
+              //         child: Table(
+              //           border: TableBorder.symmetric(),
+              //           columnWidths: const <int, TableColumnWidth>{
+              //             0: FlexColumnWidth(1),
+              //             1: FlexColumnWidth(1),
+              //           },
+              //           defaultVerticalAlignment:
+              //               TableCellVerticalAlignment.middle,
+              //           children: <TableRow>[
+              //             for (var i = 0; i < 5; i++)
+              //               TableRow(
+              //                 children: <Widget>[
+              //                   Container(
+              //                     padding: EdgeInsets.symmetric(
+              //                         vertical: 10, horizontal: 20),
+              //                     child: Text(
+              //                       "14/08/2000",
+              //                       style: tableFont,
+              //                     ),
+              //                   ),
+              //                   Container(
+              //                     padding: EdgeInsets.symmetric(
+              //                         vertical: 10, horizontal: 20),
+              //                     child: Text(
+              //                       "Siram Pohon",
+              //                       style: tableFont,
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //           ],
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // )
             ],
           ),
         ),

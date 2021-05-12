@@ -110,6 +110,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "date_format",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/date_format-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "dbcrypt",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/dbcrypt-1.0.0",
       "packageUri": "lib/",
@@ -380,7 +386,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-05-09T12:37:51.158994Z",
+  "generated": "2021-05-12T10:52:51.306784Z",
   "generator": "pub",
   "generatorVersion": "2.12.2"
 }

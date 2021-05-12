@@ -318,20 +318,22 @@ class _MyTaskState extends State<MyTask> {
                 child: Text("My Tasks"),
               ),
               ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: _task.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    String gardens = garden[_selectedIndexs].garden_name;
-                    String st = _task[i].start_date;
-                    String tid = _task[i].task_id.toString();
-                    String ed = _task[i].end_date;
-                    String tt = _task[i].task_type;
-                    String t = _task[i].treatment;
-                    String a = _task[i].annotation;
-                    String stat = _task[i].status;
-                    return Padding(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: _task.length,
+                itemBuilder: (BuildContext context, int i) {
+                  String gardens = garden[_selectedIndexs].garden_name;
+                  String st = _task[i].start_date;
+                  String tid = _task[i].task_id.toString();
+                  String ed = _task[i].end_date;
+                  String tt = _task[i].task_type;
+                  String t = _task[i].treatment;
+                  String a = _task[i].annotation;
+                  String stat = _task[i].status;
+                  return Visibility(
+                    visible: stat == 'Assigned' ? true : false,
+                    child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: Container(
                         padding: EdgeInsets.all(15),
@@ -479,8 +481,178 @@ class _MyTaskState extends State<MyTask> {
                           ],
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
+              ListView.builder(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: _task.length,
+                itemBuilder: (BuildContext context, int i) {
+                  String gardens = garden[_selectedIndexs].garden_name;
+                  String st = _task[i].start_date;
+                  String tid = _task[i].task_id.toString();
+                  String ed = _task[i].end_date;
+                  String tt = _task[i].task_type;
+                  String t = _task[i].treatment;
+                  String a = _task[i].annotation;
+                  String stat = _task[i].status;
+                  return Visibility(
+                    visible: stat == 'Done' ? true : false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 1), // changes position of shadow
+                            )
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.location_on),
+                                      Text("$gardens"),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    print(tid);
+                                    _showMyDialog("$tid");
+                                  },
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.calendar_today_rounded),
+                                        SizedBox(width: 10),
+                                        Text("$st - $ed")
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1,
+                                        child: Checkbox(
+                                          checkColor: Colors.white70,
+                                          activeColor: Colors.black,
+                                          value: (stat == "Assigned")
+                                              ? assigned[i]
+                                              : done[i],
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              updateTask(tid);
+                                              if (stat == "Assigned") {
+                                                assigned[i] = value;
+                                              } else {
+                                                done[i] = value;
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        // Text("Perlakuan", style: content),
+                                        child: Text("Jenis Perlakuan",
+                                            style: content),
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        //     Text("Pupuk Anorganik NPK kontol",
+                                        child: Text("$tt", style: content1),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1,
+                                        child: Container()),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      child: Text("Perlakuan", style: content),
+                                    ),
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        child: Text(
+                                          "$t",
+                                          style: content1,
+                                        )),
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text("$a"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           )),
     );

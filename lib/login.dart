@@ -9,8 +9,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 
-int authentication;
-
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
@@ -34,6 +32,8 @@ class Loginpost {
 }
 
 class _LoginState extends State<Login> {
+  int authentication = 0;
+
   @override
   Widget buttonLoginWithGoogle() {
     return Container(
@@ -115,32 +115,33 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget build(BuildContext context) {
-    Future<Loginpost> connectToAPI(String email, String password) async {
-      String lh = main.defaultLocalhost;
-      String apiURL = "$lh/api/auth/signin";
-      final apiResult = await http.post(apiURL, body: {
-        "email": email,
-        "password": password,
+  Future<Loginpost> connectToAPI(String email, String password) async {
+    String lh = main.defaultLocalhost;
+    String apiURL = "$lh/api/auth/signin";
+    final apiResult = await http.post(apiURL, body: {
+      "email": email,
+      "password": password,
+    });
+    if (apiResult.statusCode == 200) {
+      final jsonObject = jsonDecode(apiResult.body);
+      print(jsonObject);
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          duration: Duration(milliseconds: 500),
+          child: Home(),
+        ),
+      );
+      setState(() {});
+    } else {
+      setState(() {
+        authentication = 0;
       });
-      if (apiResult.statusCode == 200) {
-        final jsonObject = jsonDecode(apiResult.body);
-        print(jsonObject);
-        Navigator.pushReplacement(
-          context,
-          PageTransition(
-            type: PageTransitionType.fade,
-            duration: Duration(milliseconds: 500),
-            child: Home(),
-          ),
-        );
-      } else {
-        setState(() {
-          authentication = 0;
-        });
-      }
     }
+  }
 
+  Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     String email;
     String password;
@@ -288,14 +289,16 @@ class _LoginState extends State<Login> {
                       //   );
                       // },
                       onPressed: () {
-                        print(authentication);
                         if (formKey.currentState.validate() == true) {
                           formKey.currentState.save();
                           connectToAPI("$email", "$password");
                           if (authentication == 0) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content:
-                                    Text('Email atau password anda salah')));
+                            setState(() {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Email atau password anda salah')));
+                            });
                           }
                         }
                       },
