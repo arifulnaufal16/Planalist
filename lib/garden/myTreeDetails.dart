@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:Planalist/home.dart';
+import 'package:custom_dropdown/custom_dropdown.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class Plant {
   final int width;
   final String plant_type;
   final String status;
+  final String updatedAt;
   final List<Growths> growths;
   Plant(
       {this.plant_code,
@@ -30,6 +32,7 @@ class Plant {
       this.width,
       this.plant_type,
       this.status,
+      this.updatedAt,
       this.growths});
   factory Plant.fromJson(Map<String, dynamic> json) {
     var list = json['growths'] as List;
@@ -41,6 +44,7 @@ class Plant {
       width: json['width'],
       plant_type: json['plant_type'],
       status: json['status'],
+      updatedAt: json['updatedAt'],
       growths: growthslist,
     );
   }
@@ -67,8 +71,26 @@ class Growths {
 }
 
 Plant plants = new Plant();
+PlantUpdate plantsupdate = new PlantUpdate();
+
+class PlantUpdate {
+  final int height;
+  final int width;
+  final String status;
+  final String updatedBy;
+  PlantUpdate({this.height, this.width, this.status, this.updatedBy});
+  factory PlantUpdate.fromJson(Map<String, dynamic> json) {
+    return new PlantUpdate(
+      height: json['height'],
+      width: json['width'],
+      status: json['status'],
+    );
+  }
+}
 
 class _MyTreeDetailsState extends State<MyTreeDetails> {
+  final _formKey = GlobalKey<FormState>();
+
   Future<Null> deletePlant(String pid) async {
     String lh = main.defaultLocalhost;
     http.Response response = await http.delete('$lh/api/gardens/plants/$pid');
@@ -90,9 +112,27 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     }
   }
 
+  Future<PlantUpdate> updatePlant(
+      String pid, String h, String w, String s) async {
+    String lh = main.defaultLocalhost;
+    final http.Response response =
+        await http.put('$lh/api/gardens/plants/$pid', body: {
+      "plant_id": pid,
+      "height": h,
+      "width": w,
+      "status": s,
+    });
+    if (response.statusCode == 200) {
+      final jsonObject = jsonEncode(response.body);
+      print(jsonObject);
+      setState(() {});
+    }
+  }
+
   void initState() {
     super.initState();
     getPlant(widget.plant_id);
+    // _showMyDialogEdit(widget.plant_id);
   }
 
   static const TextStyle header = const TextStyle(
@@ -147,6 +187,170 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     );
   }
 
+  int _checkboxValue;
+  Future _showMyDialogEdit(String pid) {
+    String height;
+    String width;
+    String status;
+
+    List<String> myList = ['HEALTHY', 'SICK'];
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                content: Stack(
+                  overflow: Overflow.visible,
+                  children: <Widget>[
+                    Positioned(
+                      right: -40.0,
+                      top: -40.0,
+                      child: InkResponse(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: CircleAvatar(
+                          child: Icon(Icons.close),
+                          backgroundColor: Colors.red,
+                        ),
+                      ),
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text("Update Pohon"),
+                          SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  onSaved: (value) {
+                                    setState(() {
+                                      height = value;
+                                      // height = int.parse(h);
+                                    });
+                                  },
+                                  autofocus: false,
+                                  style: TextStyle(
+                                      fontSize: 15.0, color: Colors.black),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    fillColor: Colors.transparent,
+                                    filled: true,
+                                    labelText: "Height",
+                                    labelStyle: TextStyle(
+                                        color: FocusNode().hasFocus
+                                            ? Colors.blue
+                                            : Colors.grey),
+                                    contentPadding: const EdgeInsets.only(
+                                        left: 14.0, bottom: 6.0, top: 8.0),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  onSaved: (value) {
+                                    setState(() {
+                                      width = value;
+                                      // width = int.parse(w);
+                                    });
+                                  },
+                                  autofocus: false,
+                                  style: TextStyle(
+                                      fontSize: 15.0, color: Colors.black),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    fillColor: Colors.transparent,
+                                    filled: true,
+                                    labelText: "Diameter",
+                                    labelStyle: TextStyle(
+                                        color: FocusNode().hasFocus
+                                            ? Colors.blue
+                                            : Colors.grey),
+                                    contentPadding: const EdgeInsets.only(
+                                        left: 14.0, bottom: 6.0, top: 8.0),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CustomDropdown(
+                              valueIndex: _checkboxValue,
+                              hint: "Status",
+                              disabledColor: Colors.grey.shade100,
+                              enabledColor: Colors.grey.shade200,
+                              items: [
+                                CustomDropdownItem(text: "HEALTHY"),
+                                CustomDropdownItem(text: "SICK"),
+                              ],
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _checkboxValue = newValue;
+                                  print(_checkboxValue);
+                                  status = myList[newValue];
+                                });
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: RaisedButton(
+                              child: Text("Submit"),
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  _formKey.currentState.save();
+                                  updatePlant(
+                                      widget.plant_id, height, width, status);
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      type: PageTransitionType.rightToLeft,
+                                      duration: Duration(milliseconds: 800),
+                                      child: MyTreeDetails(
+                                          widget.plant_id, widget.garden_name),
+                                      ctx: context,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        });
+  }
+
   String convertDateFromString(String strDate) {
     DateTime todayDate = DateTime.parse(strDate);
     String x = (formatDate(todayDate, [yyyy, '/', mm, '/', dd]));
@@ -156,16 +360,8 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
   void handleClick(String value) {
     switch (value) {
       case 'Edit':
-        setState(() {
-          Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 800),
-                // child: ,
-                ctx: context),
-          );
-        });
+        _showMyDialogEdit(widget.plant_id);
+        setState(() {});
         break;
       case 'Delete':
         _showMyDialog(widget.plant_id);
@@ -204,6 +400,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     String ph = plants.height.toString();
     String pw = plants.width.toString();
     String pstat = plants.status;
+    String pupd = plants.updatedAt;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -340,6 +537,33 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                     style: tableFont,
                                   ),
                                 ),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.grey.shade300,
+                                        width: 1))),
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                  convertDateFromString(plants.updatedAt),
+                                  style: tableFont,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                  plants.height.toString(),
+                                  style: tableFont,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Text(plants.status, style: tableFont),
                               ),
                             ],
                           ),

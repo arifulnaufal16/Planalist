@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Planalist/garden/myGardenInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
@@ -80,6 +81,17 @@ class _MyGardenState extends State<MyGarden> {
 
                   child: new InkWell(
                     onTap: () {
+                      final int gardenId = garden[index].garden_id;
+                      final String garden_name = garden[index].garden_name;
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          duration: Duration(milliseconds: 800),
+                          child: MyGardenInfo(gardenId, garden_name),
+                          ctx: context,
+                        ),
+                      );
                       print("tapped");
                     },
                     child: Container(

@@ -16,7 +16,7 @@ class Login extends StatefulWidget {
 class Loginpost {
   final String email;
   final String password;
-  final String user_id;
+  final int user_id;
   Loginpost({
     this.email,
     this.password,
@@ -26,7 +26,7 @@ class Loginpost {
     return Loginpost(
       email: json['email'],
       password: json['password'],
-      user_id: json['user_id'],
+      user_id: json['id'],
     );
   }
 }
@@ -115,22 +115,27 @@ class _LoginState extends State<Login> {
     );
   }
 
+  List user;
+  Loginpost lp = new Loginpost();
+
   Future<Loginpost> connectToAPI(String email, String password) async {
     String lh = main.defaultLocalhost;
     String apiURL = "$lh/api/auth/signin";
+
     final apiResult = await http.post(apiURL, body: {
       "email": email,
       "password": password,
     });
     if (apiResult.statusCode == 200) {
       final jsonObject = jsonDecode(apiResult.body);
-      print(jsonObject);
+      lp = Loginpost.fromJson(jsonObject);
+      print(lp.user_id);
       Navigator.pushReplacement(
         context,
         PageTransition(
           type: PageTransitionType.fade,
           duration: Duration(milliseconds: 500),
-          child: Home(),
+          child: Login(),
         ),
       );
       setState(() {});
