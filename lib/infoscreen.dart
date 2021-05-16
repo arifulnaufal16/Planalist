@@ -198,7 +198,7 @@ class _InfoScreenState extends State<InfoScreen> {
         body: Column(
           children: [
             Container(
-              height: 600.0,
+              height: MediaQuery.of(context).size.height - 110,
               child: PageView(
                 physics: ClampingScrollPhysics(),
                 controller: _pageController,

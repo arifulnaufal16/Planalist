@@ -5,7 +5,8 @@ void main() {
   runApp(MyApp());
 }
 
-String defaultLocalhost = 'http://192.168.43.4:3000';
+// String defaultLocalhost = 'http://192.168.43.4:3000';
+String defaultLocalhost = 'http://10.0.2.2:3000';
 
 class MyApp extends StatelessWidget {
   @override

@@ -135,7 +135,7 @@ class _LoginState extends State<Login> {
         PageTransition(
           type: PageTransitionType.fade,
           duration: Duration(milliseconds: 500),
-          child: Login(),
+          child: Home(),
         ),
       );
       setState(() {});
