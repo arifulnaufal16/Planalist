@@ -374,9 +374,18 @@ class _AddPlantState extends State<AddPlant> {
         home: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Icon(
-          Icons.navigate_before,
+        leading: IconButton(
+          icon: Icon(Icons.navigate_before),
           color: Colors.black,
+          onPressed: () {
+            Navigator.pop(
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                  ctx: context),
+            );
+          },
         ),
         title: Text("Add Plant", style: header),
         actions: [

@@ -32,7 +32,7 @@ class Loginpost {
 }
 
 class _LoginState extends State<Login> {
-  int authentication = 0;
+  int authentication;
 
   @override
   Widget buttonLoginWithGoogle() {

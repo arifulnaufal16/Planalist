@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 
+import '../planalist_icon_icons.dart';
+import 'newTask.dart';
+
 class MyTask extends StatefulWidget {
   @override
   _MyTaskState createState() => _MyTaskState();
@@ -37,7 +40,7 @@ class Task {
   final String task_type;
   final String treatment;
   final String annotation;
-  final String status;
+  String status;
   final String start_date;
   final String end_date;
   Task(
@@ -144,6 +147,7 @@ class _MyTaskState extends State<MyTask> {
   int card = 0;
   List data;
   List garden;
+  List<Task> _task = [];
 
   Future<List<Garden>> getGarden() async {
     String lh = main.defaultLocalhost;
@@ -151,7 +155,6 @@ class _MyTaskState extends State<MyTask> {
     setState(() {
       data = json.decode(response.body);
       garden = data.map((garden) => new Garden.fromJson(garden)).toList();
-      return garden;
     });
   }
 
@@ -160,6 +163,9 @@ class _MyTaskState extends State<MyTask> {
     http.Response response = await http.delete('$lh/api/tasks/$tid');
     setState(() {
       final data = jsonDecode(response.body);
+      _task.removeWhere((element) => element.task_id.toString() == tid);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Data berhasil dihapus')));
     });
   }
 
@@ -172,7 +178,6 @@ class _MyTaskState extends State<MyTask> {
     });
   }
 
-  List<Task> _task = [];
   Future<Null> getTask(int garden_id) async {
     List<Task> _data1 = [];
     String lh = main.defaultLocalhost;
@@ -204,9 +209,14 @@ class _MyTaskState extends State<MyTask> {
     fontStyle: FontStyle.normal,
   );
 
+  void initialize() async {
+    await getGarden();
+    await getTask(garden[_selectedIndexs].garden_id);
+  }
+
   void initState() {
     super.initState();
-    getGarden();
+    initialize();
   }
 
   Future<void> _showMyDialog(String tid) async {
@@ -257,6 +267,236 @@ class _MyTaskState extends State<MyTask> {
     return MaterialApp(
       home: Scaffold(
           key: _key,
+          appBar: new AppBar(
+            backgroundColor: Colors.white,
+            toolbarHeight: 52,
+            leading: Container(
+              padding: EdgeInsets.only(left: 20),
+              child: new IconButton(
+                icon: new Icon(
+                  PlanalistIcon.menu,
+                  color: Colors.black,
+                ),
+                onPressed: () => _key.currentState.openDrawer(),
+              ),
+            ),
+            title: Container(
+              padding: EdgeInsets.only(left: 0),
+              child: Text(
+                "Planalist",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontFamily: 'PoppinsStyle',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            actions: [
+              Container(
+                padding: EdgeInsets.only(right: 10),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.green,
+                  ),
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 800),
+                          child: NewTask(),
+                          ctx: context),
+                    ).then((v) {
+                      if (v is String) {
+                        getTask(int.parse(v));
+                      }
+                    });
+                  },
+                ),
+              ),
+              // if (selectedTabIndex == 1)
+              //   Container(
+              //     padding: EdgeInsets.only(right: 10),
+              //     child: IconButton(
+              //       icon: Icon(
+              //         PlanalistIconUpdate.vector,
+              //         color: Colors.green,
+              //       ),
+              //       onPressed: () {
+              //         Navigator.push(
+              //           context,
+              //           PageTransition(
+              //               type: PageTransitionType.fade,
+              //               duration: Duration(milliseconds: 800),
+              //               child: AddGarden(),
+              //               ctx: context),
+              //         );
+              //       },
+              //     ),
+              //   ),
+              // if (selectedTabIndex == 2)
+              //   Container(
+              //     padding: EdgeInsets.only(right: 10),
+              //     child: IconButton(
+              //       icon: Icon(
+              //         PlanalistIcon.setting,
+              //         color: Colors.black,
+              //       ),
+              //       onPressed: () {
+              //         Navigator.push(
+              //           context,
+              //           PageTransition(
+              //               type: PageTransitionType.fade,
+              //               duration: Duration(milliseconds: 800),
+              //               child: MyProfileSettings(),
+              //               ctx: context),
+              //         );
+              //       },
+              //     ),
+              //   )
+            ],
+          ),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                SizedBox(
+                  height: 120,
+                  child: new DrawerHeader(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(width: 1.0, color: Colors.grey),
+                      ),
+                    ),
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                color: Colors.red,
+                                height: 24,
+                                width: 24,
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Hello,"),
+                                    Text("Daffa"),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                size: 32,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(
+                    PlanalistIcon.account,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'Account',
+                    style: TextStyle(
+                      fontFamily: 'PoppinsStyle',
+                      fontSize: 12,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: Icon(
+                    PlanalistIcon.chart,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'Activity',
+                    style: TextStyle(
+                      fontFamily: 'PoppinsStyle',
+                      fontSize: 12,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: Icon(
+                    PlanalistIcon.setting,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'My Setting',
+                    style: TextStyle(
+                      fontFamily: 'PoppinsStyle',
+                      fontSize: 12,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                Divider(
+                  color: Colors.black,
+                ),
+                ListTile(
+                  leading: Icon(
+                    PlanalistIcon.help,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'Help Center',
+                    style: TextStyle(
+                      fontFamily: 'PoppinsStyle',
+                      fontSize: 12,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: Icon(
+                    PlanalistIcon.play,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'Video Tutorial',
+                    style: TextStyle(
+                      fontFamily: 'PoppinsStyle',
+                      fontSize: 12,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
           body: ListView(
             physics: ClampingScrollPhysics(),
             shrinkWrap: true,
@@ -317,39 +557,38 @@ class _MyTaskState extends State<MyTask> {
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Text("My Tasks"),
               ),
-              ListView.builder(
-                physics: ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: _task.length,
-                itemBuilder: (BuildContext context, int i) {
-                  String gardens = garden[_selectedIndexs].garden_name;
-                  String st = _task[i].start_date;
-                  String tid = _task[i].task_id.toString();
-                  String ed = _task[i].end_date;
-                  String tt = _task[i].task_type;
-                  String t = _task[i].treatment;
-                  String a = _task[i].annotation;
-                  String stat = _task[i].status;
-                  return Visibility(
-                    visible: stat == 'Assigned' ? true : false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
-                            )
-                          ],
-                        ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 1), // changes position of shadow
+                      )
+                    ],
+                  ),
+                  child: ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: _task.length,
+                    itemBuilder: (BuildContext context, int i) {
+                      String gardens = garden[_selectedIndexs].garden_name;
+                      String st = _task[i].start_date;
+                      String tid = _task[i].task_id.toString();
+                      String ed = _task[i].end_date;
+                      String tt = _task[i].task_type;
+                      String t = _task[i].treatment;
+                      String a = _task[i].annotation;
+                      String stat = _task[i].status;
+                      return Visibility(
+                        visible: stat == 'Assigned' ? true : false,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -417,14 +656,19 @@ class _MyTaskState extends State<MyTask> {
                                           value: (stat == "Assigned")
                                               ? assigned[i]
                                               : done[i],
-                                          onChanged: (bool value) {
+                                          onChanged: (bool value) async {
+                                            await updateTask(tid);
                                             setState(() {
-                                              updateTask(tid);
+                                              _task[i].status = 'Done';
                                               if (stat == "Assigned") {
                                                 assigned[i] = value;
                                               } else {
                                                 done[i] = value;
                                               }
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Data berhasil di update')));
                                             });
                                           },
                                         ),
@@ -480,44 +724,48 @@ class _MyTaskState extends State<MyTask> {
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+                ),
               ),
-              ListView.builder(
-                physics: ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: _task.length,
-                itemBuilder: (BuildContext context, int i) {
-                  String gardens = garden[_selectedIndexs].garden_name;
-                  String st = _task[i].start_date;
-                  String tid = _task[i].task_id.toString();
-                  String ed = _task[i].end_date;
-                  String tt = _task[i].task_type;
-                  String t = _task[i].treatment;
-                  String a = _task[i].annotation;
-                  String stat = _task[i].status;
-                  return Visibility(
-                    visible: stat == 'Done' ? true : false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
-                            )
-                          ],
-                        ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Text("Done Task"),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 1), // changes position of shadow
+                      )
+                    ],
+                  ),
+                  child: ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: _task.length,
+                    itemBuilder: (BuildContext context, int i) {
+                      String gardens = garden[_selectedIndexs].garden_name;
+                      String st = _task[i].start_date;
+                      String tid = _task[i].task_id.toString();
+                      String ed = _task[i].end_date;
+                      String tt = _task[i].task_type;
+                      String t = _task[i].treatment;
+                      String a = _task[i].annotation;
+                      String stat = _task[i].status;
+                      print(_task.length);
+                      return Visibility(
+                        visible: stat == 'Done' ? true : false,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -579,23 +827,23 @@ class _MyTaskState extends State<MyTask> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.1,
-                                        child: Checkbox(
-                                          checkColor: Colors.white70,
-                                          activeColor: Colors.black,
-                                          value: (stat == "Assigned")
-                                              ? assigned[i]
-                                              : done[i],
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              updateTask(tid);
-                                              if (stat == "Assigned") {
-                                                assigned[i] = value;
-                                              } else {
-                                                done[i] = value;
-                                              }
-                                            });
-                                          },
-                                        ),
+                                        // child: Checkbox(
+                                        //   checkColor: Colors.white70,
+                                        //   activeColor: Colors.black,
+                                        //   value: (stat == "Assigned")
+                                        //       ? assigned[i]
+                                        //       : done[i],
+                                        //   onChanged: (bool value) {
+                                        //     updateTask(tid);
+                                        //     setState(() {
+                                        //       if (stat == "Assigned") {
+                                        //         assigned[i] = value;
+                                        //       } else {
+                                        //         done[i] = value;
+                                        //       }
+                                        //     });
+                                        //   },
+                                        // ),
                                       ),
                                       Container(
                                         width:
@@ -648,10 +896,10 @@ class _MyTaskState extends State<MyTask> {
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+                ),
               ),
             ],
           )),

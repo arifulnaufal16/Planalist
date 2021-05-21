@@ -344,13 +344,13 @@ class _SignupState extends State<Signup> {
                         }
                       },
 
-                      color: Colors.amberAccent,
-                      splashColor: Colors.amber,
+                      color: Colors.greenAccent,
+                      splashColor: Colors.green,
                       child: Text(
-                        "Login",
+                        "Sign Up",
                         style: TextStyle(
                             fontSize: 15.0,
-                            color: Colors.black,
+                            color: Colors.white,
                             fontFamily: 'PoppinsStyle',
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.w100),

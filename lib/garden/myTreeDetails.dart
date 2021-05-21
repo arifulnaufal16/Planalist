@@ -131,7 +131,9 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
 
   void initState() {
     super.initState();
-    getPlant(widget.plant_id);
+    setState(() {
+      getPlant(widget.plant_id);
+    });
     // _showMyDialogEdit(widget.plant_id);
   }
 
@@ -164,7 +166,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
               ),
               onPressed: () {
                 deletePlant(pid);
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   PageTransition(
                     type: PageTransitionType.rightToLeft,
@@ -326,7 +328,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                   _formKey.currentState.save();
                                   updatePlant(
                                       widget.plant_id, height, width, status);
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     PageTransition(
                                       type: PageTransitionType.rightToLeft,
@@ -505,6 +507,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                           0: FlexColumnWidth(1),
                           1: FlexColumnWidth(1),
                           2: FlexColumnWidth(1),
+                          3: FlexColumnWidth(1),
                         },
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
@@ -525,6 +528,15 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                   padding: EdgeInsets.symmetric(vertical: 10),
                                   child: Text(
                                     "Tinggi",
+                                    style: tableFont,
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Text(
+                                    "Diameter",
                                     style: tableFont,
                                   ),
                                 ),
@@ -563,6 +575,13 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                               ),
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                  plants.width.toString(),
+                                  style: tableFont,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
                                 child: Text(plants.status, style: tableFont),
                               ),
                             ],
@@ -581,6 +600,13 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                     child: Text(
                                       convertDateFromString(
                                           plants.growths[i].updatedAt),
+                                      style: tableFont,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Text(
+                                      plants.growths[i].width.toString(),
                                       style: tableFont,
                                     ),
                                   ),

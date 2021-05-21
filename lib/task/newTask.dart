@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:Planalist/home.dart';
+import 'package:Planalist/task/myTask.dart';
 import 'package:custom_dropdown/custom_dropdown.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:flutter_date_pickers/flutter_date_pickers.dart';
@@ -192,18 +192,35 @@ class _NewTaskState extends State<NewTask> {
                 ),
                 actions: [
                   TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         formKey.currentState.save();
-                        PostTask.connectToAPI(garden_id, task_type, treatment,
-                            annotation, "Assigned", startdate, enddate, "1");
-                        Navigator.pop(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 500),
-                              child: Home(),
-                              ctx: context),
-                        );
+                        if (startdate == null) {
+                          startdate = DateTime.now().toString();
+                          print(startdate);
+                        }
+                        if (enddate == null) {
+                          enddate = DateTime.now().toString();
+                          print(enddate);
+                        }
+                        if (garden_id == null ||
+                            task_type == null ||
+                            treatment == null ||
+                            annotation == null) {
+                        } else {
+                          await PostTask.connectToAPI(
+                              garden_id,
+                              task_type,
+                              treatment,
+                              annotation,
+                              "Assigned",
+                              startdate,
+                              enddate,
+                              "1");
+                          Navigator.pop(
+                            context,
+                            garden_id,
+                          );
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.only(right: 20),
@@ -381,6 +398,7 @@ class _NewTaskState extends State<NewTask> {
                         width: MediaQuery.of(context).size.width,
                         child: RaisedButton(
                           onPressed: () {
+                            FocusScope.of(context).unfocus();
                             _selectDateNow(context);
                             startdate =
                                 "${selectedDateNow.toLocal()}".split(' ')[0];
@@ -412,6 +430,7 @@ class _NewTaskState extends State<NewTask> {
                         width: MediaQuery.of(context).size.width,
                         child: RaisedButton(
                           onPressed: () {
+                            FocusScope.of(context).unfocus();
                             _selectDateEnd(context);
                             enddate =
                                 "${selectedDateEnd.toLocal()}".split(' ')[0];

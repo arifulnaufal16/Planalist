@@ -6,6 +6,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 
+import '../home.dart';
+
 class AddGarden extends StatefulWidget {
   @override
   _AddGardenState createState() => _AddGardenState();
@@ -171,6 +173,11 @@ class _AddGardenState extends State<AddGarden> {
                     onSaved: (newValue) {
                       garden_name = newValue;
                     },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Masukkan nama garden';
+                      }
+                    },
                     autofocus: false,
                     style: TextStyle(fontSize: 15.0, color: Colors.black),
                     decoration: InputDecoration(
@@ -189,6 +196,14 @@ class _AddGardenState extends State<AddGarden> {
                       enabledBorder: UnderlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+                      errorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedErrorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
                   ),
                 ),
@@ -202,6 +217,11 @@ class _AddGardenState extends State<AddGarden> {
                     autofocus: false,
                     onSaved: (newValue) {
                       location = newValue;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Masukkan lokasi garden';
+                      }
                     },
                     style: TextStyle(fontSize: 15.0, color: Colors.black),
                     decoration: InputDecoration(
@@ -220,6 +240,14 @@ class _AddGardenState extends State<AddGarden> {
                       enabledBorder: UnderlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+                      errorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedErrorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
                   ),
                 ),
@@ -233,6 +261,11 @@ class _AddGardenState extends State<AddGarden> {
                     autofocus: false,
                     onSaved: (newValue) {
                       size_m2 = newValue;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Masukkan luas garden';
+                      }
                     },
                     keyboardType: TextInputType.number,
                     style: TextStyle(fontSize: 15.0, color: Colors.black),
@@ -252,83 +285,91 @@ class _AddGardenState extends State<AddGarden> {
                       enabledBorder: UnderlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+                      errorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedErrorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(height: 20),
                 SizedBox(height: 20),
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10),
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: Text("Pohon"),
-                      ),
-                    ),
-                    Flexible(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 10),
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Text("Buah"),
-                        )),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Flexible(
+                //       flex: 1,
+                //       child: Container(
+                //         padding: EdgeInsets.only(left: 10),
+                //         width: MediaQuery.of(context).size.width / 2,
+                //         child: Text("Pohon"),
+                //       ),
+                //     ),
+                //     Flexible(
+                //         flex: 1,
+                //         child: Container(
+                //           padding: EdgeInsets.only(left: 10),
+                //           width: MediaQuery.of(context).size.width / 2,
+                //           child: Text("Buah"),
+                //         )),
+                //   ],
+                // ),
                 SizedBox(height: 10),
-                Row(
-                  children: [
-                    Flexible(
-                      child: TextField(
-                        autofocus: false,
-                        style: TextStyle(fontSize: 15.0, color: Colors.black),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          labelText: "Tree",
-                          labelStyle: TextStyle(
-                              color: FocusNode().hasFocus
-                                  ? Colors.blue
-                                  : Colors.grey),
-                          contentPadding: const EdgeInsets.only(
-                              left: 14.0, bottom: 6.0, top: 8.0),
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: TextField(
-                        autofocus: false,
-                        style: TextStyle(fontSize: 15.0, color: Colors.black),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          labelText: "Fruits",
-                          labelStyle: TextStyle(
-                              color: FocusNode().hasFocus
-                                  ? Colors.blue
-                                  : Colors.grey),
-                          contentPadding: const EdgeInsets.only(
-                              left: 14.0, bottom: 6.0, top: 8.0),
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Flexible(
+                //       child: TextField(
+                //         autofocus: false,
+                //         style: TextStyle(fontSize: 15.0, color: Colors.black),
+                //         decoration: InputDecoration(
+                //           border: InputBorder.none,
+                //           fillColor: Colors.transparent,
+                //           filled: true,
+                //           labelText: "Tree",
+                //           labelStyle: TextStyle(
+                //               color: FocusNode().hasFocus
+                //                   ? Colors.blue
+                //                   : Colors.grey),
+                //           contentPadding: const EdgeInsets.only(
+                //               left: 14.0, bottom: 6.0, top: 8.0),
+                //           focusedBorder: UnderlineInputBorder(
+                //             borderRadius: BorderRadius.circular(10.0),
+                //           ),
+                //           enabledBorder: UnderlineInputBorder(
+                //             borderRadius: BorderRadius.circular(10.0),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //     Flexible(
+                //       child: TextField(
+                //         autofocus: false,
+                //         style: TextStyle(fontSize: 15.0, color: Colors.black),
+                //         decoration: InputDecoration(
+                //           border: InputBorder.none,
+                //           fillColor: Colors.transparent,
+                //           filled: true,
+                //           labelText: "Fruits",
+                //           labelStyle: TextStyle(
+                //               color: FocusNode().hasFocus
+                //                   ? Colors.blue
+                //                   : Colors.grey),
+                //           contentPadding: const EdgeInsets.only(
+                //               left: 14.0, bottom: 6.0, top: 8.0),
+                //           focusedBorder: UnderlineInputBorder(
+                //             borderRadius: BorderRadius.circular(10.0),
+                //           ),
+                //           enabledBorder: UnderlineInputBorder(
+                //             borderRadius: BorderRadius.circular(10.0),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 SizedBox(height: 20),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -337,11 +378,22 @@ class _AddGardenState extends State<AddGarden> {
                     child: RaisedButton(
                       // onPressed: () {},
                       onPressed: () {
-                        formKey.currentState.save();
-                        // print(widget.plant_length);
-                        // print(plant_code.runtimeType);
-                        PostGarden.connectToAPI(
-                            garden_name, size_m2, location, "1");
+                        if (formKey.currentState.validate() == true) {
+                          formKey.currentState.save();
+                          // print(widget.plant_length);
+                          // print(plant_code.runtimeType);
+                          PostGarden.connectToAPI(
+                              garden_name, size_m2, location, "1");
+                          Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.rightToLeft,
+                              duration: Duration(milliseconds: 800),
+                              child: Home(),
+                              ctx: context,
+                            ),
+                          );
+                        }
                       },
                       color: Colors.green,
                       splashColor: Colors.green,
@@ -374,9 +426,18 @@ class _AddGardenState extends State<AddGarden> {
         home: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Icon(
-          Icons.navigate_before,
+        leading: IconButton(
+          icon: Icon(Icons.navigate_before),
           color: Colors.black,
+          onPressed: () {
+            Navigator.pop(
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                  ctx: context),
+            );
+          },
         ),
         title: Text("Add Garden", style: header),
         actions: [
