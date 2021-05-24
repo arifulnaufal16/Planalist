@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Planalist/garden/myGardenDetails.dart';
+import 'package:Planalist/garden/myGardenInfo.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 import 'package:custom_dropdown/custom_dropdown.dart';
@@ -132,259 +133,19 @@ class _AddPlantState extends State<AddPlant> {
       fontSize: 16);
   FocusNode myFocusNode = new FocusNode();
 
-  Widget titleContent() {
-    List<String> myList = ['Duren', 'Mangga', 'Kopi'];
-    return Container(
-      child: Form(
-        key: formKey,
-        child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      _showPicker(context);
-                    },
-                    child: CircleAvatar(
-                      radius: 55,
-                      backgroundColor: Colors.grey,
-                      child: _image != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.file(
-                                _image,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.fitHeight,
-                              ),
-                            )
-                          : Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              width: 100,
-                              height: 100,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.grey[800],
-                              ),
-                            ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  child: Text("No."),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  child: TextFormField(
-                    onSaved: (value) => setState(() => plant_code = value),
-                    autofocus: false,
-                    style: TextStyle(fontSize: 15.0, color: Colors.black),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      fillColor: Colors.transparent,
-                      filled: true,
-                      labelText: "No.Tanaman",
-                      labelStyle: TextStyle(
-                          color:
-                              FocusNode().hasFocus ? Colors.blue : Colors.grey),
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 6.0, top: 8.0),
-                      focusedBorder: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Container(
-                  child: Text("Jenis Pohon"),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: CustomDropdown(
-                    valueIndex: _checkboxValue,
-                    hint: "Jenis Pohon",
-                    disabledColor: Colors.grey.shade100,
-                    enabledColor: Colors.grey.shade200,
-                    items: [
-                      CustomDropdownItem(text: "Duren"),
-                      CustomDropdownItem(text: "Mangga"),
-                      CustomDropdownItem(text: "Kopi"),
-                    ],
-                    onChanged: (newValue) {
-                      setState(() {
-                        _checkboxValue = newValue;
-                        plant_type = myList[newValue];
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10),
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: Text("Tinggi"),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10),
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: Text("Diameter"),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: [
-                    Flexible(
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        onSaved: (value) {
-                          setState(() {
-                            height = value;
-                            // height = int.parse(h);
-                          });
-                        },
-                        autofocus: false,
-                        style: TextStyle(fontSize: 15.0, color: Colors.black),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          labelText: "Height",
-                          labelStyle: TextStyle(
-                              color: FocusNode().hasFocus
-                                  ? Colors.blue
-                                  : Colors.grey),
-                          contentPadding: const EdgeInsets.only(
-                              left: 14.0, bottom: 6.0, top: 8.0),
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        onSaved: (value) {
-                          setState(() {
-                            width = value;
-                            // width = int.parse(w);
-                          });
-                        },
-                        autofocus: false,
-                        style: TextStyle(fontSize: 15.0, color: Colors.black),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          labelText: "Diameter",
-                          labelStyle: TextStyle(
-                              color: FocusNode().hasFocus
-                                  ? Colors.blue
-                                  : Colors.grey),
-                          contentPadding: const EdgeInsets.only(
-                              left: 14.0, bottom: 6.0, top: 8.0),
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ButtonTheme(
-                    minWidth: MediaQuery.of(context).size.width,
-                    child: RaisedButton(
-                      // onPressed: () {},
-                      onPressed: () {
-                        formKey.currentState.save();
-                        // print(widget.plant_length);
-                        // print(plant_code.runtimeType);
-                        PostPlant.connectToAPI(widget.garden_id.toString(),
-                            plant_code, height, width, plant_type, "1");
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 500),
-                              child: MyGardenDetails(
-                                  widget.garden_id, widget.garden_name),
-                              ctx: context),
-                        );
-                      },
-                      color: Colors.green,
-                      splashColor: Colors.green,
-                      child: Text(
-                        "Save Garden",
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            color: Colors.white,
-                            fontFamily: 'PoppinsStyle',
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w100),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
+  List<String> myList = ['Duren', 'Mangga', 'Kopi'];
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.navigate_before),
           color: Colors.black,
           onPressed: () {
-            Navigator.pop(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                  ctx: context),
-            );
+            Navigator.pop(context);
           },
         ),
         title: Text("Add Plant", style: header),
@@ -395,7 +156,256 @@ class _AddPlantState extends State<AddPlant> {
           )
         ],
       ),
-      body: Container(padding: EdgeInsets.all(20), child: titleContent()),
+      body: Container(
+          padding: EdgeInsets.all(20),
+          child: Container(
+            child: Form(
+              key: formKey,
+              child: ListView(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            _showPicker(context);
+                          },
+                          child: CircleAvatar(
+                            radius: 55,
+                            backgroundColor: Colors.grey,
+                            child: _image != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.file(
+                                      _image,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.fitHeight,
+                                    ),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    width: 100,
+                                    height: 100,
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.grey[800],
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        child: Text("No."),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        child: TextFormField(
+                          onSaved: (value) =>
+                              setState(() => plant_code = value),
+                          autofocus: false,
+                          style: TextStyle(fontSize: 15.0, color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: Colors.transparent,
+                            filled: true,
+                            labelText: "No.Tanaman",
+                            labelStyle: TextStyle(
+                                color: FocusNode().hasFocus
+                                    ? Colors.blue
+                                    : Colors.grey),
+                            contentPadding: const EdgeInsets.only(
+                                left: 14.0, bottom: 6.0, top: 8.0),
+                            focusedBorder: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        child: Text("Jenis Pohon"),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: CustomDropdown(
+                          valueIndex: _checkboxValue,
+                          hint: "Jenis Pohon",
+                          disabledColor: Colors.grey.shade100,
+                          enabledColor: Colors.grey.shade200,
+                          items: [
+                            CustomDropdownItem(text: "Duren"),
+                            CustomDropdownItem(text: "Mangga"),
+                            CustomDropdownItem(text: "Kopi"),
+                          ],
+                          onChanged: (newValue) {
+                            setState(() {
+                              _checkboxValue = newValue;
+                              plant_type = myList[newValue];
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: Text("Tinggi"),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: Text("Diameter"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              onSaved: (value) {
+                                setState(() {
+                                  height = value;
+                                  // height = int.parse(h);
+                                });
+                              },
+                              autofocus: false,
+                              style: TextStyle(
+                                  fontSize: 15.0, color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                fillColor: Colors.transparent,
+                                filled: true,
+                                labelText: "Height",
+                                labelStyle: TextStyle(
+                                    color: FocusNode().hasFocus
+                                        ? Colors.blue
+                                        : Colors.grey),
+                                contentPadding: const EdgeInsets.only(
+                                    left: 14.0, bottom: 6.0, top: 8.0),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              onSaved: (value) {
+                                setState(() {
+                                  width = value;
+                                  // width = int.parse(w);
+                                });
+                              },
+                              autofocus: false,
+                              style: TextStyle(
+                                  fontSize: 15.0, color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                fillColor: Colors.transparent,
+                                filled: true,
+                                labelText: "Diameter",
+                                labelStyle: TextStyle(
+                                    color: FocusNode().hasFocus
+                                        ? Colors.blue
+                                        : Colors.grey),
+                                contentPadding: const EdgeInsets.only(
+                                    left: 14.0, bottom: 6.0, top: 8.0),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ButtonTheme(
+                          minWidth: MediaQuery.of(context).size.width,
+                          child: RaisedButton(
+                            // onPressed: () {},
+                            onPressed: () async {
+                              formKey.currentState.save();
+
+                              if (height == null ||
+                                  width == null ||
+                                  plant_type == null) {
+                                print("c");
+                                _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                                    content: new Text(
+                                        "Pohon tidak dapat ditambahkan, isi form terlebih dahulu")));
+                              } else {
+                                await PostPlant.connectToAPI(
+                                    widget.garden_id.toString(),
+                                    plant_code,
+                                    height,
+                                    width,
+                                    plant_type,
+                                    "1");
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Pohon berhasil ditambahkan')));
+                                Navigator.pop(context, gardens.garden_id);
+                              }
+                              // print(widget.plant_length);
+                              // print(plant_code.runtimeType);
+                            },
+                            color: Colors.green,
+                            splashColor: Colors.green,
+                            child: Text(
+                              "Save Plant",
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.white,
+                                  fontFamily: 'PoppinsStyle',
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w100),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          )),
     ));
   }
 }

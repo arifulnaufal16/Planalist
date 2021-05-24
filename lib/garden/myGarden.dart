@@ -14,6 +14,7 @@ class MyGarden extends StatefulWidget {
   final int index = 0;
   final int garden_id;
   final String garden_name;
+  final String location;
   final int plantcount;
   final int gardenhealthy;
   final int gardensick;
@@ -21,6 +22,7 @@ class MyGarden extends StatefulWidget {
       {this.garden_id,
       this.garden_name,
       this.plantcount,
+      this.location,
       this.gardenhealthy,
       this.gardensick});
   factory MyGarden.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class MyGarden extends StatefulWidget {
       garden_id: json['garden_id'],
       garden_name: json['garden_name'],
       plantcount: json['plants_total'],
+      location: json['location'],
       gardenhealthy: json['plants_healthy'],
       gardensick: json['plants_sick'],
     );
@@ -45,7 +48,7 @@ class _MyGardenState extends State<MyGarden> {
 
     data = json.decode(response.body);
     garden = data.map((garden) => new MyGarden.fromJson(garden)).toList();
-    print(garden);
+    print(garden[0].location);
     setState(() {});
   }
 
@@ -92,7 +95,7 @@ class _MyGardenState extends State<MyGarden> {
                 PlanalistIconUpdate.vector,
                 color: Colors.green,
               ),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.push(
                   context,
                   PageTransition(
@@ -100,7 +103,11 @@ class _MyGardenState extends State<MyGarden> {
                       duration: Duration(milliseconds: 800),
                       child: AddGarden(),
                       ctx: context),
-                );
+                ).then((v) {
+                  if (v is String) {
+                    getGarden();
+                  }
+                });
               },
             ),
           ),
@@ -300,7 +307,7 @@ class _MyGardenState extends State<MyGarden> {
                     //   },
 
                     child: new InkWell(
-                      onTap: () {
+                      onTap: () async {
                         final int gardenId = garden[index].garden_id;
                         final String garden_name = garden[index].garden_name;
                         Navigator.push(
@@ -311,8 +318,11 @@ class _MyGardenState extends State<MyGarden> {
                             child: MyGardenInfo(gardenId, garden_name),
                             ctx: context,
                           ),
-                        );
-                        print("tapped");
+                        ).then((v) {
+                          if (v is String) {
+                            getGarden();
+                          }
+                        });
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width,
@@ -339,11 +349,14 @@ class _MyGardenState extends State<MyGarden> {
                                     height: 25.0,
                                     minWidth: 20,
                                     child: FlatButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         final int gardenId =
                                             garden[index].garden_id;
                                         final String garden_name =
                                             garden[index].garden_name;
+                                        final String loc =
+                                            garden[index].location;
+
                                         Navigator.push(
                                           context,
                                           PageTransition(
@@ -352,10 +365,14 @@ class _MyGardenState extends State<MyGarden> {
                                             duration:
                                                 Duration(milliseconds: 800),
                                             child: MyGardenDetails(
-                                                gardenId, garden_name),
+                                                gardenId, garden_name, loc),
                                             ctx: context,
                                           ),
-                                        );
+                                        ).then((v) {
+                                          if (v is String) {
+                                            getGarden();
+                                          }
+                                        });
                                       },
                                       child: Text(
                                         "Detail",

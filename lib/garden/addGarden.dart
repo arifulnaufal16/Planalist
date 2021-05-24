@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:Planalist/garden/myGarden.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -377,22 +378,20 @@ class _AddGardenState extends State<AddGarden> {
                     minWidth: MediaQuery.of(context).size.width,
                     child: RaisedButton(
                       // onPressed: () {},
-                      onPressed: () {
+
+                      onPressed: () async {
                         if (formKey.currentState.validate() == true) {
                           formKey.currentState.save();
                           // print(widget.plant_length);
                           // print(plant_code.runtimeType);
-                          PostGarden.connectToAPI(
+                          await PostGarden.connectToAPI(
                               garden_name, size_m2, location, "1");
-                          Navigator.pushReplacement(
+                          Navigator.pop(
                             context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              duration: Duration(milliseconds: 800),
-                              child: Home(),
-                              ctx: context,
-                            ),
+                            garden_name,
                           );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Garden berhasil ditambahkan')));
                         }
                       },
                       color: Colors.green,

@@ -96,9 +96,12 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
     }
   }
 
+  void initialize() async {}
+
   void initState() {
     super.initState();
     getGarden(widget.garden_id.toString());
+
     // _showMyDialogEdit(widget.plant_id);
   }
 
@@ -159,7 +162,6 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
     String gname;
     String size;
     String location;
-
     showDialog(
         context: context,
         builder: (context) {
@@ -184,127 +186,165 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
                     ),
                     Form(
                       key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text("Update Garden"),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            keyboardType: TextInputType.text,
-                            onSaved: (value) {
-                              setState(() {
-                                gname = value;
-                                // width = int.parse(w);
-                              });
-                            },
-                            autofocus: false,
-                            style:
-                                TextStyle(fontSize: 15.0, color: Colors.black),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              fillColor: Colors.transparent,
-                              filled: true,
-                              labelText: "Nama Garden",
-                              labelStyle: TextStyle(
-                                  color: FocusNode().hasFocus
-                                      ? Colors.blue
-                                      : Colors.grey),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 14.0, bottom: 6.0, top: 8.0),
-                              focusedBorder: UnderlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            keyboardType: TextInputType.number,
-                            onSaved: (value) {
-                              setState(() {
-                                size = value;
-                                // width = int.parse(w);
-                              });
-                            },
-                            autofocus: false,
-                            style:
-                                TextStyle(fontSize: 15.0, color: Colors.black),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              fillColor: Colors.transparent,
-                              filled: true,
-                              labelText: "Ukuran (m2)",
-                              labelStyle: TextStyle(
-                                  color: FocusNode().hasFocus
-                                      ? Colors.blue
-                                      : Colors.grey),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 14.0, bottom: 6.0, top: 8.0),
-                              focusedBorder: UnderlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            keyboardType: TextInputType.text,
-                            onSaved: (value) {
-                              setState(() {
-                                location = value;
-                                // width = int.parse(w);
-                              });
-                            },
-                            autofocus: false,
-                            style:
-                                TextStyle(fontSize: 15.0, color: Colors.black),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              fillColor: Colors.transparent,
-                              filled: true,
-                              labelText: "Lokasi",
-                              labelStyle: TextStyle(
-                                  color: FocusNode().hasFocus
-                                      ? Colors.blue
-                                      : Colors.grey),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 14.0, bottom: 6.0, top: 8.0),
-                              focusedBorder: UnderlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: RaisedButton(
-                              child: Text("Submit"),
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  _formKey.currentState.save();
-                                  updatePlant(widget.garden_id.toString(),
-                                      gname, size, location);
-                                  Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      type: PageTransitionType.rightToLeft,
-                                      duration: Duration(milliseconds: 800),
-                                      child:
-                                          MyGardenInfo(widget.garden_id, gname),
-                                      ctx: context,
-                                    ),
-                                  );
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text("Update Garden"),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) {
+                                setState(() {
+                                  gname = value;
+                                  // width = int.parse(w);
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Masukkan nama garden';
                                 }
                               },
+                              autofocus: false,
+                              style: TextStyle(
+                                  fontSize: 15.0, color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                fillColor: Colors.transparent,
+                                filled: true,
+                                labelText: "Nama Garden",
+                                labelStyle: TextStyle(
+                                    color: FocusNode().hasFocus
+                                        ? Colors.blue
+                                        : Colors.grey),
+                                contentPadding: const EdgeInsets.only(
+                                    left: 14.0, bottom: 6.0, top: 8.0),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                focusedErrorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
                             ),
-                          )
-                        ],
+                            SizedBox(height: 20),
+                            TextFormField(
+                              keyboardType: TextInputType.number,
+                              onSaved: (value) {
+                                setState(() {
+                                  size = value;
+                                  // width = int.parse(w);
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Masukkan luas garden';
+                                }
+                              },
+                              autofocus: false,
+                              style: TextStyle(
+                                  fontSize: 15.0, color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                fillColor: Colors.transparent,
+                                filled: true,
+                                labelText: "Ukuran (m2)",
+                                labelStyle: TextStyle(
+                                    color: FocusNode().hasFocus
+                                        ? Colors.blue
+                                        : Colors.grey),
+                                contentPadding: const EdgeInsets.only(
+                                    left: 14.0, bottom: 6.0, top: 8.0),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                focusedErrorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) {
+                                setState(() {
+                                  location = value;
+                                  // width = int.parse(w);
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Masukkan lokasi garden';
+                                }
+                              },
+                              autofocus: false,
+                              style: TextStyle(
+                                  fontSize: 15.0, color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                fillColor: Colors.transparent,
+                                filled: true,
+                                labelText: "Lokasi",
+                                labelStyle: TextStyle(
+                                    color: FocusNode().hasFocus
+                                        ? Colors.blue
+                                        : Colors.grey),
+                                contentPadding: const EdgeInsets.only(
+                                    left: 14.0, bottom: 6.0, top: 8.0),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                focusedErrorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RaisedButton(
+                                child: Text("Submit"),
+                                onPressed: () {
+                                  if (_formKey.currentState.validate() ==
+                                      true) {
+                                    _formKey.currentState.save();
+                                    updatePlant(widget.garden_id.toString(),
+                                        gname, size, location);
+                                    setState(() {
+                                      getGarden(widget.garden_id.toString());
+                                    });
+                                    Navigator.pop(
+                                      context,
+                                    );
+                                  }
+                                },
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -364,13 +404,7 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
             icon: Icon(Icons.navigate_before),
             color: Colors.black,
             onPressed: () {
-              Navigator.pop(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                    ctx: context),
-              );
+              Navigator.pop(context, gardens.garden_id);
             },
           ),
           title: Text("Detail", style: header),

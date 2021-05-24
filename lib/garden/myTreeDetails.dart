@@ -166,15 +166,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
               ),
               onPressed: () {
                 deletePlant(pid);
-                Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    duration: Duration(milliseconds: 800),
-                    child: Home(),
-                    ctx: context,
-                  ),
-                );
+                Navigator.pop(context, pid);
               },
             ),
             TextButton(
@@ -411,13 +403,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
             icon: Icon(Icons.navigate_before),
             color: Colors.black,
             onPressed: () {
-              Navigator.pop(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                    ctx: context),
-              );
+              Navigator.pop(context, g);
             },
           ),
           title: Text("Detail", style: header),

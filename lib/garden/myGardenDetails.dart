@@ -1,5 +1,6 @@
 import 'package:Planalist/garden/addGarden.dart';
 import 'package:Planalist/garden/addPlant.dart';
+import 'package:Planalist/planalist_icon_icons.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:Planalist/main.dart' as main;
 import 'dart:convert';
@@ -13,8 +14,9 @@ class MyGardenDetails extends StatefulWidget {
   _MyGardenDetailsState createState() => _MyGardenDetailsState();
   final int garden_id;
   final String garden_name;
+  final String garden_location;
   final int index = 0;
-  MyGardenDetails(this.garden_id, this.garden_name);
+  MyGardenDetails(this.garden_id, this.garden_name, this.garden_location);
 }
 
 class Plant {
@@ -97,9 +99,13 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
     }
   }
 
+  void initializ() async {
+    await getPlant();
+  }
+
   void initState() {
     super.initState();
-    getPlant();
+    initializ();
   }
 
   Widget build(BuildContext context) {
@@ -194,7 +200,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                       ),
                                       Container(
                                         child: Text(
-                                          "Durian Garden",
+                                          widget.garden_name,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 30,
@@ -205,55 +211,62 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                         ),
                                       ),
                                       SizedBox(height: 10),
-                                      Container(
-                                        child: Text(
-                                          widget.garden_name,
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 16,
-                                            fontFamily: 'PoppinsStyle',
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 20),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade200,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: TextFormField(
-                                          cursorColor: Colors.black,
-                                          decoration: InputDecoration(
-                                            prefixIcon: Container(
-                                              // add padding to adjust icon
-                                              child: Icon(
-                                                Icons.search,
-                                                color: Colors.grey.shade500,
+                                      Row(
+                                        children: [
+                                          Icon(Icons.location_on),
+                                          SizedBox(width: 10),
+                                          Container(
+                                            child: Text(
+                                              widget.garden_location,
+                                              style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 16,
+                                                fontFamily: 'PoppinsStyle',
+                                                fontStyle: FontStyle.normal,
+                                                fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                              vertical: 0.0,
-                                              horizontal: 20,
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.grey),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                      SizedBox(height: 5),
+                                      SizedBox(height: 10),
+
+                                      // SizedBox(height: 20),
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //       color: Colors.grey.shade200,
+                                      //       borderRadius:
+                                      //           BorderRadius.circular(10)),
+                                      //   child: TextFormField(
+                                      //     cursorColor: Colors.black,
+                                      //     decoration: InputDecoration(
+                                      //       prefixIcon: Container(
+                                      //         // add padding to adjust icon
+                                      //         child: Icon(
+                                      //           Icons.search,
+                                      //           color: Colors.grey.shade500,
+                                      //         ),
+                                      //       ),
+                                      //       contentPadding:
+                                      //           EdgeInsets.symmetric(
+                                      //         vertical: 0.0,
+                                      //         horizontal: 20,
+                                      //       ),
+                                      //       focusedBorder: OutlineInputBorder(
+                                      //         borderSide: new BorderSide(
+                                      //             color: Colors.grey),
+                                      //         borderRadius:
+                                      //             BorderRadius.circular(10),
+                                      //       ),
+                                      //       enabledBorder: OutlineInputBorder(
+                                      //         borderSide: new BorderSide(
+                                      //             color: Colors.white),
+                                      //         borderRadius:
+                                      //             BorderRadius.circular(10),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                       Container(
                                         child: Divider(
                                           indent: 20,
@@ -261,7 +274,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                           thickness: 5,
                                         ),
                                       ),
-                                      SizedBox(height: 5),
+                                      SizedBox(height: 10),
                                       Center(
                                         child: ButtonTheme(
                                           minWidth:
@@ -269,19 +282,21 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                           child: RaisedButton(
                                             // onPressed: () {},
 
-                                            onPressed: () {
+                                            onPressed: () async {
                                               Navigator.push(
                                                 context,
                                                 PageTransition(
                                                     type:
                                                         PageTransitionType.fade,
-                                                    duration: Duration(
-                                                        milliseconds: 500),
                                                     child: AddPlant(
                                                         widget.garden_id,
                                                         widget.garden_name),
                                                     ctx: context),
-                                              );
+                                              ).then((v) {
+                                                if (v is int) {
+                                                  getPlant();
+                                                }
+                                              });
                                             },
                                             color: Colors.green,
                                             splashColor: Colors.green,
@@ -346,7 +361,11 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                                   widget
                                                                       .garden_name),
                                                               ctx: context),
-                                                        );
+                                                        ).then((v) {
+                                                          if (v is String) {
+                                                            getPlant();
+                                                          }
+                                                        });
                                                       },
                                                       child: Container(
                                                         padding:
