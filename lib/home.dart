@@ -63,6 +63,7 @@ class _HomeState extends State<Home> {
             height: 64,
             margin: EdgeInsets.fromLTRB(24, 0, 24, 20),
             decoration: BoxDecoration(
+              color: Colors.black,
               borderRadius: BorderRadius.all(
                 Radius.circular(30),
               ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Planalist/loading.dart';
 import 'package:Planalist/task/taskListDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:page_transition/page_transition.dart';
@@ -144,6 +145,7 @@ class _MyTaskState extends State<MyTask> {
   // }
 
   int _selectedIndexs = 0;
+  bool isLoading = false;
   int card = 0;
   List data;
   List garden;
@@ -152,10 +154,11 @@ class _MyTaskState extends State<MyTask> {
   Future<List<Garden>> getGarden() async {
     String lh = main.defaultLocalhost;
     http.Response response = await http.get('$lh/api/gardens');
-    setState(() {
-      data = json.decode(response.body);
-      garden = data.map((garden) => new Garden.fromJson(garden)).toList();
-    });
+    data = json.decode(response.body);
+    garden = data.map((garden) => new Garden.fromJson(garden)).toList();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<Null> deleteTask(String tid) async {
@@ -184,14 +187,14 @@ class _MyTaskState extends State<MyTask> {
     final http.Response response = await http.get('$lh/api/$garden_id/tasks');
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      setState(() {
-        for (var i = 0; i < data.first['tasks'].length; i++) {
-          _data1.add(Task.fromJson(data.first['tasks'][i]));
-        }
-
-        _task = _data1;
-        return _task;
-      });
+      for (var i = 0; i < data.first['tasks'].length; i++) {
+        _data1.add(Task.fromJson(data.first['tasks'][i]));
+      }
+      _task = _data1;
+      isLoading = false;
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -517,6 +520,8 @@ class _MyTaskState extends State<MyTask> {
                       onTap: () {
                         setState(() {
                           _selectedIndexs = index;
+                          _task.clear();
+                          isLoading = true;
                           getTask(garden[_selectedIndexs].garden_id);
                         });
                       },
@@ -573,160 +578,187 @@ class _MyTaskState extends State<MyTask> {
                       )
                     ],
                   ),
-                  child: ListView.builder(
-                    physics: ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: _task.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      String gardens = garden[_selectedIndexs].garden_name;
-                      String st = _task[i].start_date;
-                      String tid = _task[i].task_id.toString();
-                      String ed = _task[i].end_date;
-                      String tt = _task[i].task_type;
-                      String t = _task[i].treatment;
-                      String a = _task[i].annotation;
-                      String stat = _task[i].status;
-                      return Visibility(
-                        visible: stat == 'Assigned' ? true : false,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.location_on),
-                                      Text("$gardens"),
-                                    ],
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    print(tid);
-                                    _showMyDialog("$tid");
-                                  },
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.calendar_today_rounded),
-                                        SizedBox(width: 10),
-                                        Text("$st - $ed")
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                  child: isLoading == true
+                      ? Loading()
+                      : _task.isEmpty
+                          ? Text("Data Tidak Ditemukan")
+                          : ListView.builder(
+                              physics: ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: _task.length,
+                              itemBuilder: (BuildContext context, int i) {
+                                String gardens =
+                                    garden[_selectedIndexs].garden_name;
+                                String st = _task[i].start_date;
+                                String tid = _task[i].task_id.toString();
+                                String ed = _task[i].end_date;
+                                String tt = _task[i].task_type;
+                                String t = _task[i].treatment;
+                                String a = _task[i].annotation;
+                                String stat = _task[i].status;
+                                return Visibility(
+                                  visible: stat == 'Assigned' ? true : false,
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        child: Checkbox(
-                                          checkColor: Colors.white70,
-                                          activeColor: Colors.black,
-                                          value: (stat == "Assigned")
-                                              ? assigned[i]
-                                              : done[i],
-                                          onChanged: (bool value) async {
-                                            await updateTask(tid);
-                                            setState(() {
-                                              _task[i].status = 'Done';
-                                              if (stat == "Assigned") {
-                                                assigned[i] = value;
-                                              } else {
-                                                done[i] = value;
-                                              }
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          'Data berhasil di update')));
-                                            });
-                                          },
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.location_on),
+                                                Text("$gardens"),
+                                              ],
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              print(tid);
+                                              _showMyDialog("$tid");
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        // Text("Perlakuan", style: content),
-                                        child: Text("Jenis Perlakuan",
-                                            style: content),
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        //     Text("Pupuk Anorganik NPK kontol",
-                                        child: Text("$tt", style: content1),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 5),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade300,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(Icons
+                                                      .calendar_today_rounded),
+                                                  SizedBox(width: 10),
+                                                  Text("$st - $ed")
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.1,
+                                                  child: Checkbox(
+                                                    checkColor: Colors.white70,
+                                                    activeColor: Colors.black,
+                                                    value: (stat == "Assigned")
+                                                        ? assigned[i]
+                                                        : done[i],
+                                                    onChanged:
+                                                        (bool value) async {
+                                                      await updateTask(tid);
+                                                      setState(() {
+                                                        _task[i].status =
+                                                            'Done';
+                                                        if (stat ==
+                                                            "Assigned") {
+                                                          assigned[i] = value;
+                                                        } else {
+                                                          done[i] = value;
+                                                        }
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(SnackBar(
+                                                                content: Text(
+                                                                    'Data berhasil di update')));
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.3,
+                                                  // Text("Perlakuan", style: content),
+                                                  child: Text("Jenis Perlakuan",
+                                                      style: content),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.3,
+                                                  //     Text("Pupuk Anorganik NPK kontol",
+                                                  child: Text("$tt",
+                                                      style: content1),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.1,
+                                                  child: Container()),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3,
+                                                child: Text("Perlakuan",
+                                                    style: content),
+                                              ),
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.3,
+                                                  child: Text(
+                                                    "$t",
+                                                    style: content1,
+                                                  )),
+                                            ],
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.all(10),
+                                            child: Text("$a"),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        child: Container()),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.3,
-                                      child: Text("Perlakuan", style: content),
-                                    ),
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Text(
-                                          "$t",
-                                          style: content1,
-                                        )),
-                                  ],
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text("$a"),
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
                 ),
               ),
               Container(
@@ -749,156 +781,175 @@ class _MyTaskState extends State<MyTask> {
                       )
                     ],
                   ),
-                  child: ListView.builder(
-                    physics: ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: _task.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      String gardens = garden[_selectedIndexs].garden_name;
-                      String st = _task[i].start_date;
-                      String tid = _task[i].task_id.toString();
-                      String ed = _task[i].end_date;
-                      String tt = _task[i].task_type;
-                      String t = _task[i].treatment;
-                      String a = _task[i].annotation;
-                      String stat = _task[i].status;
-                      print(_task.length);
-                      return Visibility(
-                        visible: stat == 'Done' ? true : false,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.location_on),
-                                      Text("$gardens"),
-                                    ],
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    print(tid);
-                                    _showMyDialog("$tid");
-                                  },
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.calendar_today_rounded),
-                                        SizedBox(width: 10),
-                                        Text("$st - $ed")
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: Row(
+                  child: _task.isEmpty
+                      ? Text("Data Tidak Ditemukan")
+                      : ListView.builder(
+                          physics: ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: _task.length,
+                          itemBuilder: (BuildContext context, int i) {
+                            String gardens =
+                                garden[_selectedIndexs].garden_name;
+                            String st = _task[i].start_date;
+                            String tid = _task[i].task_id.toString();
+                            String ed = _task[i].end_date;
+                            String tt = _task[i].task_type;
+                            String t = _task[i].treatment;
+                            String a = _task[i].annotation;
+                            String stat = _task[i].status;
+                            print(_task.length);
+                            return Visibility(
+                              visible: stat == 'Done' ? true : false,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.location_on),
+                                            Text("$gardens"),
+                                          ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                        onPressed: () {
+                                          print(tid);
+                                          _showMyDialog("$tid");
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        // child: Checkbox(
-                                        //   checkColor: Colors.white70,
-                                        //   activeColor: Colors.black,
-                                        //   value: (stat == "Assigned")
-                                        //       ? assigned[i]
-                                        //       : done[i],
-                                        //   onChanged: (bool value) {
-                                        //     updateTask(tid);
-                                        //     setState(() {
-                                        //       if (stat == "Assigned") {
-                                        //         assigned[i] = value;
-                                        //       } else {
-                                        //         done[i] = value;
-                                        //       }
-                                        //     });
-                                        //   },
-                                        // ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Container(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                  Icons.calendar_today_rounded),
+                                              SizedBox(width: 10),
+                                              Text("$st - $ed")
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.1,
+                                              // child: Checkbox(
+                                              //   checkColor: Colors.white70,
+                                              //   activeColor: Colors.black,
+                                              //   value: (stat == "Assigned")
+                                              //       ? assigned[i]
+                                              //       : done[i],
+                                              //   onChanged: (bool value) {
+                                              //     updateTask(tid);
+                                              //     setState(() {
+                                              //       if (stat == "Assigned") {
+                                              //         assigned[i] = value;
+                                              //       } else {
+                                              //         done[i] = value;
+                                              //       }
+                                              //     });
+                                              //   },
+                                              // ),
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              // Text("Perlakuan", style: content),
+                                              child: Text("Jenis Perlakuan",
+                                                  style: content),
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              //     Text("Pupuk Anorganik NPK kontol",
+                                              child:
+                                                  Text("$tt", style: content1),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.1,
+                                              child: Container()),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3,
+                                            child: Text("Perlakuan",
+                                                style: content),
+                                          ),
+                                          Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              child: Text(
+                                                "$t",
+                                                style: content1,
+                                              )),
+                                        ],
                                       ),
                                       Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        // Text("Perlakuan", style: content),
-                                        child: Text("Jenis Perlakuan",
-                                            style: content),
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        //     Text("Pupuk Anorganik NPK kontol",
-                                        child: Text("$tt", style: content1),
+                                        padding: EdgeInsets.all(10),
+                                        child: Text("$a"),
                                       ),
                                     ],
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        child: Container()),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.3,
-                                      child: Text("Perlakuan", style: content),
-                                    ),
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Text(
-                                          "$t",
-                                          style: content1,
-                                        )),
-                                  ],
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text("$a"),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ),
             ],

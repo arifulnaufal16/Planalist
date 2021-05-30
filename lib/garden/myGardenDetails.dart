@@ -89,13 +89,11 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
       // for (Map i in data) {
       //   _list.add(Garden.fromJson(i));
       // }
-      setState(() {
-        for (var i = 0; i < data.first['plants'].length; i++) {
-          _list.add(Plant.fromJson(data.first['plants'][i]));
-          print(_list);
-        }
-        return _list;
-      });
+      _list.clear();
+      for (var i = 0; i < data.first['plants'].length; i++) {
+        _list.add(Plant.fromJson(data.first['plants'][i]));
+      }
+      setState(() {});
     }
   }
 
@@ -105,7 +103,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
 
   void initState() {
     super.initState();
-    initializ();
+    this.initializ();
   }
 
   Widget build(BuildContext context) {
@@ -293,9 +291,8 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                         widget.garden_name),
                                                     ctx: context),
                                               ).then((v) {
-                                                if (v is int) {
-                                                  getPlant();
-                                                }
+                                                print(v);
+                                                getPlant();
                                               });
                                             },
                                             color: Colors.green,

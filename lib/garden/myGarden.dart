@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:Planalist/main.dart' as main;
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
+import '../loading.dart';
 import '../planalist_icon_icons.dart';
 import 'addGarden.dart';
 import 'myGardenDetails.dart';
@@ -15,9 +16,9 @@ class MyGarden extends StatefulWidget {
   final int garden_id;
   final String garden_name;
   final String location;
-  final int plantcount;
-  final int gardenhealthy;
-  final int gardensick;
+  final String plantcount;
+  final String gardenhealthy;
+  final String gardensick;
   MyGarden(
       {this.garden_id,
       this.garden_name,
@@ -45,11 +46,11 @@ class _MyGardenState extends State<MyGarden> {
   Future<List<MyGarden>> getGarden() async {
     String lh = main.defaultLocalhost;
     http.Response response = await http.get('$lh/api/gardens');
-
-    data = json.decode(response.body);
-    garden = data.map((garden) => new MyGarden.fromJson(garden)).toList();
-    print(garden[0].location);
-    setState(() {});
+    setState(() {
+      data = json.decode(response.body);
+      garden = data.map((garden) => new MyGarden.fromJson(garden)).toList();
+      print(garden[0].location);
+    });
   }
 
   void initState() {
@@ -369,7 +370,7 @@ class _MyGardenState extends State<MyGarden> {
                                             ctx: context,
                                           ),
                                         ).then((v) {
-                                          if (v is String) {
+                                          if (v is Null) {
                                             getGarden();
                                           }
                                         });

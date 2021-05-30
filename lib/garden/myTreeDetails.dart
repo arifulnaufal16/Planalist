@@ -320,15 +320,8 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                   _formKey.currentState.save();
                                   updatePlant(
                                       widget.plant_id, height, width, status);
-                                  Navigator.pushReplacement(
+                                  Navigator.pop(
                                     context,
-                                    PageTransition(
-                                      type: PageTransitionType.rightToLeft,
-                                      duration: Duration(milliseconds: 800),
-                                      child: MyTreeDetails(
-                                          widget.plant_id, widget.garden_name),
-                                      ctx: context,
-                                    ),
                                   );
                                 }
                               },
