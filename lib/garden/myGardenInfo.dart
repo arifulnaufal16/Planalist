@@ -134,15 +134,7 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
               ),
               onPressed: () {
                 deleteGarden(pid);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    duration: Duration(milliseconds: 800),
-                    child: Home(),
-                    ctx: context,
-                  ),
-                );
+                Navigator.pop(context);
               },
             ),
             TextButton(

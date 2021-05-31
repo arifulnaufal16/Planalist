@@ -325,14 +325,12 @@ class _MyGardenState extends State<MyGarden> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  duration: Duration(milliseconds: 800),
+                                  duration: Duration(milliseconds: 200),
                                   child: MyGardenInfo(gardenId, garden_name),
                                   ctx: context,
                                 ),
                               ).then((v) {
-                                if (v is String) {
-                                  getGarden();
-                                }
+                                getGarden();
                               });
                             },
                             child: Container(

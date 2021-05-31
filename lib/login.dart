@@ -109,7 +109,7 @@ class _LoginState extends State<Login> {
               context,
               PageTransition(
                   type: PageTransitionType.rightToLeft,
-                  duration: Duration(milliseconds: 800),
+                  duration: Duration(milliseconds: 200),
                   child: Signup(),
                   ctx: context),
             );
@@ -162,10 +162,10 @@ class _LoginState extends State<Login> {
                   child: AppBar(
                     bottomOpacity: 50,
                     backgroundColor: Colors.white,
-                    leading: Icon(
-                      Icons.navigate_before,
-                      color: Colors.black,
-                    ),
+                    // leading: Icon(
+                    //   Icons.navigate_before,
+                    //   color: Colors.white,
+                    // ),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

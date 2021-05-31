@@ -134,9 +134,12 @@ class _SignupState extends State<Signup> {
           child: Container(
             child: AppBar(
               backgroundColor: Colors.white,
-              leading: Icon(
-                Icons.navigate_before,
+              leading: IconButton(
+                icon: Icon(Icons.navigate_before),
                 color: Colors.black,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               title: Container(
                 child: Text(
