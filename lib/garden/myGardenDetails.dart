@@ -291,7 +291,6 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                                         widget.garden_name),
                                                     ctx: context),
                                               ).then((v) {
-                                                print(v);
                                                 getPlant();
                                               });
                                             },

@@ -132,7 +132,7 @@ class _LoginState extends State<Login> {
     if (apiResult.statusCode == 200) {
       final jsonObject = jsonDecode(apiResult.body);
       lp = Loginpost.fromJson(jsonObject);
-      print(lp.user_id);
+
       Navigator.pushReplacement(
         context,
         PageTransition(
@@ -142,7 +142,10 @@ class _LoginState extends State<Login> {
         ),
       );
       setState(() {});
-    } else {}
+      return lp;
+    } else {
+      load = false;
+    }
   }
 
   Widget build(BuildContext context) {
@@ -295,14 +298,15 @@ class _LoginState extends State<Login> {
                             //         ctx: context),
                             //   );
                             // },
-                            onPressed: () {
+                            onPressed: () async {
                               if (formKey.currentState.validate() == true) {
                                 formKey.currentState.save();
+                                load = true;
+                                await connectToAPI("$email", "$password");
                                 setState(() {
-                                  load = true;
-                                  connectToAPI("$email", "$password");
                                   print(lp.user_id);
                                 });
+                                // });
                                 // if (lp.user_id == null) {
                                 //   setState(() {
                                 //     load = false;

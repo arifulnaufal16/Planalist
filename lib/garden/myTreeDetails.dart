@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../loading.dart';
+
 class MyTreeDetails extends StatefulWidget {
   @override
   _MyTreeDetailsState createState() => _MyTreeDetailsState();
@@ -36,7 +38,6 @@ class Plant {
       this.growths});
   factory Plant.fromJson(Map<String, dynamic> json) {
     var list = json['growths'] as List;
-    print(list.runtimeType);
     List<Growths> growthslist = list.map((i) => Growths.fromJson(i)).toList();
     return new Plant(
       plant_code: json['plant_code'],
@@ -90,13 +91,15 @@ class PlantUpdate {
 
 class _MyTreeDetailsState extends State<MyTreeDetails> {
   final _formKey = GlobalKey<FormState>();
-
+  bool isLoading = true;
   Future<Null> deletePlant(String pid) async {
     String lh = main.defaultLocalhost;
     http.Response response = await http.delete('$lh/api/gardens/plants/$pid');
-    setState(() {
-      final data = jsonDecode(response.body);
-    });
+    final data = jsonEncode(response.body);
+    print(data);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   List _plant;
@@ -105,10 +108,14 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     String lh = main.defaultLocalhost;
     final http.Response response =
         await http.get('$lh/api/gardens/plants/$pid');
+
     if (response.statusCode == 200) {
       Map<String, dynamic> userMap = jsonDecode(response.body);
       plants = Plant.fromJson(userMap);
-      setState(() {});
+      print(plants);
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -124,6 +131,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     });
     if (response.statusCode == 200) {
       final jsonObject = jsonEncode(response.body);
+      getPlant(pid);
       print(jsonObject);
       setState(() {});
     }
@@ -131,9 +139,8 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
 
   void initState() {
     super.initState();
-    setState(() {
-      getPlant(widget.plant_id);
-    });
+    getPlant(widget.plant_id);
+
     // _showMyDialogEdit(widget.plant_id);
   }
 
@@ -166,7 +173,9 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
               ),
               onPressed: () {
                 deletePlant(pid);
-                Navigator.pop(context, pid);
+                Navigator.pop(context);
+
+                // Navigator.pop(context);
               },
             ),
             TextButton(
@@ -188,7 +197,6 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     String status;
 
     List<String> myList = ['HEALTHY', 'SICK'];
-
     showDialog(
         context: context,
         builder: (context) {
@@ -348,7 +356,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     switch (value) {
       case 'Edit':
         _showMyDialogEdit(widget.plant_id);
-        setState(() {});
+
         break;
       case 'Delete':
         _showMyDialog(widget.plant_id);
@@ -430,235 +438,252 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
             ),
           ],
         ),
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: ListView(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Row(
+        body: isLoading == true
+            ? Loading()
+            : Container(
+                padding: EdgeInsets.all(20),
+                child: ListView(
                   children: [
                     Container(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Image(
-                        image: AssetImage("image/image1.png"),
-                        height: 80,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("$pcode", style: boldFont),
-                        SizedBox(height: 6),
-                        Text("Lokasi : $g", style: descFont),
-                        SizedBox(height: 6),
-                        Text("Tipe tanaman : $ptype", style: descFont),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Deskripsi", style: boldFont),
-                    SizedBox(height: 10),
-                    Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius amet donec sed ornare. ",
-                      style: tableFont,
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Kondisi", style: boldFont),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Table(
-                        border: TableBorder.symmetric(),
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FlexColumnWidth(1),
-                          1: FlexColumnWidth(1),
-                          2: FlexColumnWidth(1),
-                          3: FlexColumnWidth(1),
-                        },
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        children: <TableRow>[
-                          TableRow(
-                            children: <Widget>[
-                              Center(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    "Tanggal Update",
-                                    style: tableFont,
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    "Tinggi",
-                                    style: tableFont,
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    "Diameter",
-                                    style: tableFont,
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    "Status",
-                                    style: tableFont,
-                                  ),
-                                ),
-                              ),
-                            ],
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(right: 20),
+                            child: Image(
+                              image: AssetImage("image/image1.png"),
+                              height: 80,
+                            ),
                           ),
-                          TableRow(
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.grey.shade300,
-                                        width: 1))),
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Text(
-                                  convertDateFromString(plants.updatedAt),
-                                  style: tableFont,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Text(
-                                  plants.height.toString(),
-                                  style: tableFont,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Text(
-                                  plants.width.toString(),
-                                  style: tableFont,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Text(plants.status, style: tableFont),
-                              ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("$pcode", style: boldFont),
+                              SizedBox(height: 6),
+                              Text("Lokasi : $g", style: descFont),
+                              SizedBox(height: 6),
+                              Text("Tipe tanaman : $ptype", style: descFont),
                             ],
-                          ),
-                          if (plants.growths.length != null)
-                            for (var i = 0; i < plants.growths.length; i++)
-                              TableRow(
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey.shade300,
-                                            width: 1))),
-                                children: <Widget>[
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Text(
-                                      convertDateFromString(
-                                          plants.growths[i].updatedAt),
-                                      style: tableFont,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Text(
-                                      plants.growths[i].width.toString(),
-                                      style: tableFont,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Text(
-                                      plants.growths[i].height.toString(),
-                                      style: tableFont,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Text(plants.growths[i].status,
-                                        style: tableFont),
-                                  ),
-                                ],
-                              ),
+                          )
                         ],
                       ),
-                    )
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Deskripsi", style: boldFont),
+                          SizedBox(height: 10),
+                          Text(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius amet donec sed ornare. ",
+                            style: tableFont,
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Kondisi", style: boldFont),
+                          SizedBox(height: 10),
+                          Container(
+                            child: Table(
+                              border: TableBorder.symmetric(),
+                              columnWidths: const <int, TableColumnWidth>{
+                                0: FlexColumnWidth(1),
+                                1: FlexColumnWidth(1),
+                                2: FlexColumnWidth(1),
+                                3: FlexColumnWidth(1),
+                              },
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              children: <TableRow>[
+                                TableRow(
+                                  children: <Widget>[
+                                    Center(
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          "Tanggal Update",
+                                          style: tableFont,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          "Tinggi",
+                                          style: tableFont,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          "Diameter",
+                                          style: tableFont,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          "Status",
+                                          style: tableFont,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey.shade300,
+                                              width: 1))),
+                                  children: <Widget>[
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: Text(
+                                        convertDateFromString(plants.updatedAt),
+                                        style: tableFont,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: Text(
+                                        plants.height.toString(),
+                                        style: tableFont,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: Text(
+                                        plants.width.toString(),
+                                        style: tableFont,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child:
+                                          Text(plants.status, style: tableFont),
+                                    ),
+                                  ],
+                                ),
+                                if (plants.growths.length != null)
+                                  for (var i = 0;
+                                      i < plants.growths.length;
+                                      i++)
+                                    TableRow(
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey.shade300,
+                                                  width: 1))),
+                                      children: <Widget>[
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Text(
+                                            convertDateFromString(
+                                                plants.growths[i].updatedAt),
+                                            style: tableFont,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Text(
+                                            plants.growths[i].width.toString(),
+                                            style: tableFont,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Text(
+                                            plants.growths[i].height.toString(),
+                                            style: tableFont,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Text(plants.growths[i].status,
+                                              style: tableFont),
+                                        ),
+                                      ],
+                                    ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    // Container(
+                    //   padding: EdgeInsets.symmetric(vertical: 10),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Text(
+                    //         "Reminder",
+                    //         style: boldFont,
+                    //       ),
+                    //       SizedBox(height: 10),
+                    //       Container(
+                    //         child: Table(
+                    //           border: TableBorder.symmetric(),
+                    //           columnWidths: const <int, TableColumnWidth>{
+                    //             0: FlexColumnWidth(1),
+                    //             1: FlexColumnWidth(1),
+                    //           },
+                    //           defaultVerticalAlignment:
+                    //               TableCellVerticalAlignment.middle,
+                    //           children: <TableRow>[
+                    //             for (var i = 0; i < 5; i++)
+                    //               TableRow(
+                    //                 children: <Widget>[
+                    //                   Container(
+                    //                     padding: EdgeInsets.symmetric(
+                    //                         vertical: 10, horizontal: 20),
+                    //                     child: Text(
+                    //                       "14/08/2000",
+                    //                       style: tableFont,
+                    //                     ),
+                    //                   ),
+                    //                   Container(
+                    //                     padding: EdgeInsets.symmetric(
+                    //                         vertical: 10, horizontal: 20),
+                    //                     child: Text(
+                    //                       "Siram Pohon",
+                    //                       style: tableFont,
+                    //                     ),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //           ],
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // )
                   ],
                 ),
               ),
-              // Container(
-              //   padding: EdgeInsets.symmetric(vertical: 10),
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         "Reminder",
-              //         style: boldFont,
-              //       ),
-              //       SizedBox(height: 10),
-              //       Container(
-              //         child: Table(
-              //           border: TableBorder.symmetric(),
-              //           columnWidths: const <int, TableColumnWidth>{
-              //             0: FlexColumnWidth(1),
-              //             1: FlexColumnWidth(1),
-              //           },
-              //           defaultVerticalAlignment:
-              //               TableCellVerticalAlignment.middle,
-              //           children: <TableRow>[
-              //             for (var i = 0; i < 5; i++)
-              //               TableRow(
-              //                 children: <Widget>[
-              //                   Container(
-              //                     padding: EdgeInsets.symmetric(
-              //                         vertical: 10, horizontal: 20),
-              //                     child: Text(
-              //                       "14/08/2000",
-              //                       style: tableFont,
-              //                     ),
-              //                   ),
-              //                   Container(
-              //                     padding: EdgeInsets.symmetric(
-              //                         vertical: 10, horizontal: 20),
-              //                     child: Text(
-              //                       "Siram Pohon",
-              //                       style: tableFont,
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //           ],
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // )
-            ],
-          ),
-        ),
       ),
     );
   }
