@@ -63,9 +63,10 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
   Future<Null> deleteGarden(String gid) async {
     String lh = main.defaultLocalhost;
     http.Response response = await http.delete('$lh/api/gardens/$gid');
-    setState(() {
-      final data = jsonDecode(response.body);
-    });
+    final data = jsonDecode(response.body);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   List _garden;
@@ -74,8 +75,11 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
     final http.Response response = await http.get('$lh/api/gardens/$gid');
     if (response.statusCode == 200) {
       Map<String, dynamic> userMap = jsonDecode(response.body);
+
       gardens = Garden.fromJson(userMap);
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -115,6 +119,8 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
   Future<void> _showMyDialog(String pid) async {
     return showDialog<void>(
       context: context,
+
+      useRootNavigator: false,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
@@ -134,6 +140,7 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
               ),
               onPressed: () {
                 deleteGarden(pid);
+                Navigator.pop(context);
                 Navigator.pop(context);
               },
             ),
@@ -448,8 +455,6 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("$gid", style: boldFont),
-                        SizedBox(height: 6),
                         Text("Garden Nmae : $gname", style: descFont),
                         SizedBox(height: 6),
                         Text("Lokasi : $loc", style: descFont),

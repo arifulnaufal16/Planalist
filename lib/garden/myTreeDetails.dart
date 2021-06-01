@@ -91,6 +91,8 @@ class PlantUpdate {
 
 class _MyTreeDetailsState extends State<MyTreeDetails> {
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _formkey1 = new GlobalKey<ScaffoldState>();
+
   bool isLoading = true;
   Future<Null> deletePlant(String pid) async {
     String lh = main.defaultLocalhost;
@@ -137,10 +139,13 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     }
   }
 
+  void initz() async {
+    getPlant(widget.plant_id);
+  }
+
   void initState() {
     super.initState();
-    getPlant(widget.plant_id);
-
+    initz();
     // _showMyDialogEdit(widget.plant_id);
   }
 
@@ -154,6 +159,7 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
   Future<void> _showMyDialog(String pid) async {
     return showDialog<void>(
       context: context,
+      useRootNavigator: false,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
@@ -174,6 +180,10 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
               onPressed: () {
                 deletePlant(pid);
                 Navigator.pop(context);
+                String x;
+                Navigator.pop(context, x);
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Pohon berhasil dihapus')));
 
                 // Navigator.pop(context);
               },
@@ -328,9 +338,12 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                   _formKey.currentState.save();
                                   updatePlant(
                                       widget.plant_id, height, width, status);
-                                  Navigator.pop(
-                                    context,
-                                  );
+                                  Navigator.pop(context);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Pohon berhasil di update')));
                                 }
                               },
                             ),
@@ -352,14 +365,14 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     return x;
   }
 
-  void handleClick(String value) {
+  void handleClick(String value) async {
     switch (value) {
       case 'Edit':
         _showMyDialogEdit(widget.plant_id);
 
         break;
       case 'Delete':
-        _showMyDialog(widget.plant_id);
+        await _showMyDialog(widget.plant_id);
         setState(() {});
         break;
     }

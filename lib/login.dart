@@ -148,6 +148,7 @@ class _LoginState extends State<Login> {
     }
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     String email;
@@ -156,6 +157,7 @@ class _LoginState extends State<Login> {
         ? Loading()
         : MaterialApp(
             home: Scaffold(
+              key: _key,
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(50.0),
                 child: Container(
@@ -303,9 +305,8 @@ class _LoginState extends State<Login> {
                                 formKey.currentState.save();
                                 load = true;
                                 await connectToAPI("$email", "$password");
-                                setState(() {
-                                  print(lp.user_id);
-                                });
+
+                                setState(() {});
                                 // });
                                 // if (lp.user_id == null) {
                                 //   setState(() {

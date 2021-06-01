@@ -60,9 +60,13 @@ class _MyGardenState extends State<MyGarden> {
     }
   }
 
+  void initz() async {
+    await getGarden();
+  }
+
   void initState() {
     super.initState();
-    getGarden();
+    this.initz();
   }
 
   @override
@@ -113,7 +117,7 @@ class _MyGardenState extends State<MyGarden> {
                       ctx: context),
                 ).then((v) {
                   if (v is String) {
-                    getGarden();
+                    initz();
                   }
                 });
               },
@@ -324,13 +328,15 @@ class _MyGardenState extends State<MyGarden> {
                               Navigator.push(
                                 context,
                                 PageTransition(
-                                  type: PageTransitionType.rightToLeft,
+                                  type: PageTransitionType.fade,
                                   duration: Duration(milliseconds: 200),
                                   child: MyGardenInfo(gardenId, garden_name),
                                   ctx: context,
                                 ),
                               ).then((v) {
-                                getGarden();
+                                if (v is Null) {
+                                  initz();
+                                }
                               });
                             },
                             child: Container(
@@ -381,7 +387,7 @@ class _MyGardenState extends State<MyGarden> {
                                                 ),
                                               ).then((v) {
                                                 if (v is Null) {
-                                                  getGarden();
+                                                  initz();
                                                 }
                                               });
                                             },
