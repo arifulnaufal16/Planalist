@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../loading.dart';
+
 class MyGardenInfo extends StatefulWidget {
   @override
   _MyGardenInfoState createState() => _MyGardenInfoState();
@@ -59,6 +61,7 @@ class GardenUpdate {
 
 class _MyGardenInfoState extends State<MyGardenInfo> {
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   Future<Null> deleteGarden(String gid) async {
     String lh = main.defaultLocalhost;
@@ -75,8 +78,8 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
     final http.Response response = await http.get('$lh/api/gardens/$gid');
     if (response.statusCode == 200) {
       Map<String, dynamic> userMap = jsonDecode(response.body);
-
       gardens = Garden.fromJson(userMap);
+      isLoading = true;
       if (mounted) {
         setState(() {});
       }
@@ -437,99 +440,102 @@ class _MyGardenInfoState extends State<MyGardenInfo> {
             ),
           ],
         ),
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: ListView(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Row(
+        body: isLoading == false
+            ? Loading()
+            : Container(
+                padding: EdgeInsets.all(20),
+                child: ListView(
                   children: [
                     Container(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Image(
-                        image: AssetImage("image/image1.png"),
-                        height: 80,
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(right: 20),
+                            child: Image(
+                              image: AssetImage("image/image1.png"),
+                              height: 80,
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Garden Nmae : $gname", style: descFont),
+                              SizedBox(height: 6),
+                              Text("Lokasi : $loc", style: descFont),
+                              SizedBox(height: 6),
+                              Text("Ukuran per meter kubik: $size",
+                                  style: descFont),
+                            ],
+                          )
+                        ],
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Garden Nmae : $gname", style: descFont),
-                        SizedBox(height: 6),
-                        Text("Lokasi : $loc", style: descFont),
-                        SizedBox(height: 6),
-                        Text("Ukuran per meter kubik: $size", style: descFont),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Deskripsi", style: boldFont),
-                    SizedBox(height: 10),
-                    Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius amet donec sed ornare. ",
-                      style: tableFont,
-                    )
-                  ],
-                ),
-              ),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Deskripsi", style: boldFont),
+                          SizedBox(height: 10),
+                          Text(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius amet donec sed ornare. ",
+                            style: tableFont,
+                          )
+                        ],
+                      ),
+                    ),
 
-              // Container(
-              //   padding: EdgeInsets.symmetric(vertical: 10),
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         "Reminder",
-              //         style: boldFont,
-              //       ),
-              //       SizedBox(height: 10),
-              //       Container(
-              //         child: Table(
-              //           border: TableBorder.symmetric(),
-              //           columnWidths: const <int, TableColumnWidth>{
-              //             0: FlexColumnWidth(1),
-              //             1: FlexColumnWidth(1),
-              //           },
-              //           defaultVerticalAlignment:
-              //               TableCellVerticalAlignment.middle,
-              //           children: <TableRow>[
-              //             for (var i = 0; i < 5; i++)
-              //               TableRow(
-              //                 children: <Widget>[
-              //                   Container(
-              //                     padding: EdgeInsets.symmetric(
-              //                         vertical: 10, horizontal: 20),
-              //                     child: Text(
-              //                       "14/08/2000",
-              //                       style: tableFont,
-              //                     ),
-              //                   ),
-              //                   Container(
-              //                     padding: EdgeInsets.symmetric(
-              //                         vertical: 10, horizontal: 20),
-              //                     child: Text(
-              //                       "Siram Pohon",
-              //                       style: tableFont,
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //           ],
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // )
-            ],
-          ),
-        ),
+                    // Container(
+                    //   padding: EdgeInsets.symmetric(vertical: 10),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Text(
+                    //         "Reminder",
+                    //         style: boldFont,
+                    //       ),
+                    //       SizedBox(height: 10),
+                    //       Container(
+                    //         child: Table(
+                    //           border: TableBorder.symmetric(),
+                    //           columnWidths: const <int, TableColumnWidth>{
+                    //             0: FlexColumnWidth(1),
+                    //             1: FlexColumnWidth(1),
+                    //           },
+                    //           defaultVerticalAlignment:
+                    //               TableCellVerticalAlignment.middle,
+                    //           children: <TableRow>[
+                    //             for (var i = 0; i < 5; i++)
+                    //               TableRow(
+                    //                 children: <Widget>[
+                    //                   Container(
+                    //                     padding: EdgeInsets.symmetric(
+                    //                         vertical: 10, horizontal: 20),
+                    //                     child: Text(
+                    //                       "14/08/2000",
+                    //                       style: tableFont,
+                    //                     ),
+                    //                   ),
+                    //                   Container(
+                    //                     padding: EdgeInsets.symmetric(
+                    //                         vertical: 10, horizontal: 20),
+                    //                     child: Text(
+                    //                       "Siram Pohon",
+                    //                       style: tableFont,
+                    //                     ),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //           ],
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // )
+                  ],
+                ),
+              ),
       ),
     );
   }

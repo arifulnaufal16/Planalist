@@ -93,6 +93,7 @@ flutter:
     - image/image2.png
     - image/image3.png 
     - image/google.png
+    - image/planalist.png
     
   fonts:
     - family: PlanalistIcon

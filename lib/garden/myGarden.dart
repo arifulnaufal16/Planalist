@@ -376,9 +376,9 @@ class _MyGardenState extends State<MyGarden> {
                                                 context,
                                                 PageTransition(
                                                   type: PageTransitionType
-                                                      .rightToLeft,
+                                                      .bottomToTop,
                                                   duration: Duration(
-                                                      milliseconds: 800),
+                                                      milliseconds: 200),
                                                   child: MyGardenDetails(
                                                       gardenId,
                                                       garden_name,

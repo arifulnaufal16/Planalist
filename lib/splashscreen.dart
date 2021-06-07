@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'package:Planalist/infoscreen.dart';
-import 'package:Planalist/home.dart';
-import 'package:http/http.dart' as http;
+import 'package:Planalist/login.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -22,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) {
-          return InfoScreen();
+          return Login();
         }),
       );
     });
@@ -33,10 +30,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Container(
-            color: Colors.green,
+          child: Image(
+            image: AssetImage('image/image1.png'),
             height: 200,
-            width: 200,
           ),
         ),
       ),

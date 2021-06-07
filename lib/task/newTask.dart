@@ -112,7 +112,9 @@ class _NewTaskState extends State<NewTask> {
     http.Response response = await http.get('$lh/api/gardens');
     data = json.decode(response.body);
     garden = data.map((garden) => Garden.fromJson(garden)).toList();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   _selectDateNow(BuildContext context) async {

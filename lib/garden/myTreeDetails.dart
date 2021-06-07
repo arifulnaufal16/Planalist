@@ -110,7 +110,6 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
     String lh = main.defaultLocalhost;
     final http.Response response =
         await http.get('$lh/api/gardens/plants/$pid');
-
     if (response.statusCode == 200) {
       Map<String, dynamic> userMap = jsonDecode(response.body);
       plants = Plant.fromJson(userMap);
@@ -339,7 +338,6 @@ class _MyTreeDetailsState extends State<MyTreeDetails> {
                                   updatePlant(
                                       widget.plant_id, height, width, status);
                                   Navigator.pop(context);
-
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(

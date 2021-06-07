@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
+import '../loading.dart';
 import 'myTreeDetails.dart';
 
 class MyGardenDetails extends StatefulWidget {
@@ -59,7 +60,7 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
 
   ///must be between min and max values of body content ratio.
   final double bodyContentRatioParallax = .9;
-
+  bool isLoading = false;
   @override
   void dispose() {
     headerNegativeOffset.dispose();
@@ -93,6 +94,8 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
       for (var i = 0; i < data.first['plants'].length; i++) {
         _list.add(Plant.fromJson(data.first['plants'][i]));
       }
+      print(_list.length);
+      isLoading = true;
       if (mounted) {
         setState(() {});
       }
@@ -315,107 +318,119 @@ class _MyGardenDetailsState extends State<MyGardenDetails> {
                                         ),
                                       ),
                                       SizedBox(height: 10),
+
                                       Expanded(
                                         child: MediaQuery.removePadding(
                                           context: context,
                                           removeTop: true,
-                                          child: ListView.builder(
-                                            controller: scrollController,
-                                            itemCount: _list.length,
-                                            itemBuilder:
-                                                (BuildContext context, int i) {
-                                              final plantgarden = _list[i];
-                                              return Container(
-                                                margin: EdgeInsets.symmetric(
-                                                    vertical: 5),
-                                                child: Card(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20), // if you need this
-                                                    side: BorderSide(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.2),
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                  child: InkWell(
-                                                      splashColor: Colors.blue
-                                                          .withAlpha(30),
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          PageTransition(
-                                                              type:
-                                                                  PageTransitionType
-                                                                      .fade,
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      800),
-                                                              child: MyTreeDetails(
-                                                                  plantgarden
-                                                                      .plant_id
-                                                                      .toString(),
-                                                                  widget
-                                                                      .garden_name),
-                                                              ctx: context),
-                                                        ).then((v) {
-                                                          initializ();
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(15),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Container(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      right:
-                                                                          20),
-                                                              child: ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            60.0),
-                                                                child: Image(
-                                                                  image: AssetImage(
-                                                                      'image/image1.png'),
-                                                                  height: 60,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                plantgarden.plant_code !=
-                                                                        null
-                                                                    ? Text(plantgarden
-                                                                        .plant_code
-                                                                        .toString())
-                                                                    : Text(
-                                                                        "[Belum ada nama pohon]"),
-                                                                plantgarden.plant_code !=
-                                                                        null
-                                                                    ? Text(plantgarden
-                                                                        .plant_type
-                                                                        .toString())
-                                                                    : Text(
-                                                                        "[Belum ada tipe pohon]"),
-                                                              ],
-                                                            )
-                                                          ],
+                                          child: isLoading == false
+                                              ? Loading()
+                                              : ListView.builder(
+                                                  controller: scrollController,
+                                                  itemCount: _list.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int i) {
+                                                    final plantgarden =
+                                                        _list[i];
+
+                                                    return Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 5),
+                                                      child: Card(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  20), // if you need this
+                                                          side: BorderSide(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.2),
+                                                            width: 1,
+                                                          ),
                                                         ),
-                                                      )),
+                                                        child: InkWell(
+                                                            splashColor: Colors
+                                                                .blue
+                                                                .withAlpha(30),
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                PageTransition(
+                                                                    type: PageTransitionType
+                                                                        .fade,
+                                                                    duration: Duration(
+                                                                        milliseconds:
+                                                                            800),
+                                                                    child: MyTreeDetails(
+                                                                        plantgarden
+                                                                            .plant_id
+                                                                            .toString(),
+                                                                        widget
+                                                                            .garden_name),
+                                                                    ctx:
+                                                                        context),
+                                                              ).then((v) {
+                                                                initializ();
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(15),
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Container(
+                                                                    padding: EdgeInsets.only(
+                                                                        right:
+                                                                            20),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              60.0),
+                                                                      child:
+                                                                          Image(
+                                                                        image: AssetImage(
+                                                                            'image/image1.png'),
+                                                                        height:
+                                                                            60,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      plantgarden.plant_code !=
+                                                                              null
+                                                                          ? Text(plantgarden
+                                                                              .plant_code
+                                                                              .toString())
+                                                                          : Text(
+                                                                              "[Belum ada nama pohon]"),
+                                                                      plantgarden.plant_code !=
+                                                                              null
+                                                                          ? Text(plantgarden
+                                                                              .plant_type
+                                                                              .toString())
+                                                                          : Text(
+                                                                              "[Belum ada tipe pohon]"),
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            )),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
-                                              );
-                                            },
-                                          ),
                                         ),
                                       ),
                                     ],
