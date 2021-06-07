@@ -1,0 +1,44 @@
+{
+    "plant_id": 5,
+    "garden_id": 1,
+    "plant_code": "1",
+    "height": 120,
+    "width": 40,
+    "plant_type": "mangga",
+    "created_by": 3,
+    "status": "HEALTHY",
+    "createdAt": "2021-05-03T01:43:33.000Z",
+    "updatedAt": "2021-05-11T01:57:54.000Z",
+    "growths": [
+        {
+            "growth_id": 3,
+            "plant_id": 5,
+            "height": 120,
+            "width": 40,
+            "status": "HEALTHY",
+            "updatedBy": 1,
+            "createdAt": "2021-05-11T01:57:54.000Z",
+            "updatedAt": "2021-05-11T01:57:54.000Z"
+        },
+        {
+            "growth_id": 2,
+            "plant_id": 5,
+            "height": 120,
+            "width": 40,
+            "status": "HEALTHY",
+            "updatedBy": 1,
+            "createdAt": "2021-05-11T01:56:04.000Z",
+            "updatedAt": "2021-05-11T01:56:04.000Z"
+        },
+        {
+            "growth_id": 1,
+            "plant_id": 5,
+            "height": 120,
+            "width": 40,
+            "status": "HEALTHY",
+            "updatedBy": 1,
+            "createdAt": "2021-05-11T01:54:33.000Z",
+            "updatedAt": "2021-05-11T01:54:33.000Z"
+        }
+    ]
+}
